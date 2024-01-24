@@ -1,7 +1,7 @@
 '''
-Program Name: P2_Anderson.py
+Program Name: enchanted-chasm.py
 Author: Michael J. Anderson
-Date: 04Feb2024
+Date: 24JanFeb2024
 
 
 Purpose:
@@ -36,6 +36,7 @@ Pseudo Code
 List of Functions:
 - Generate board
 - Generate walls
+- Generate random spawn locations
 - Place monster, hero, pit, treasure on the board
 - Move the hero
 
@@ -45,10 +46,7 @@ import random
 #user_wall_choice = int(input('Enter the number of walls needed: '))
 user_wall_choice = 3
 
-#my_wall = ['E'] * 20
-#my_wall[0] = 'W'
-#my_wall[19] ='W'
-
+# Build Wall
 def wall (row, col) :
     my_wall = []
 
@@ -68,6 +66,13 @@ def wall (row, col) :
 
         i += 1
     return my_wall
+
+# Store a list of locations where a wall is
+
+# Function to find the location where the pit, monster,and treasure are
+
+# Generate random locations
+
 
 my_wall = wall(20, 20)
 
