@@ -110,6 +110,7 @@ def spawn_locations (wall) :
 
 # Debug, clean view, to show where the obstacles are
 def debug_spawn_locations (wall) :
+    # NEED TO FIX
     #my_list = []
     rows = len(wall)
     i = 0
@@ -148,6 +149,30 @@ def initialize_obstacle_location (board) :
     
     return MASTER_OBSTACLES
 
+def spawn_hero () :
+    heros_list = ['H']
+    rows = len(MASTER_SPAWN_LOCATIONS) - 1
+    cols = len(MASTER_SPAWN_LOCATIONS[0]) - 1
+
+    # MASTER_OBSTACLES.update({'H' : [ran_row, ran_col]})
+
+    i = 0
+    while i < len(heros_list):
+        ran_row = random.sample(range(1, rows), 1)[0]
+
+        ran_col = random.choice(MASTER_SPAWN_LOCATIONS[ran_row])
+        #ran_col = random.sample(range(1, cols), 1)[0]
+        # Enforce the rules for obstacle locations
+        MASTER_OBSTACLES.update({heros_list[i]: [ran_row, ran_col]})
+
+        MASTER_BOARD[ran_row][ran_col] = heros_list[i]
+
+        i += 1
+
+    return MASTER_OBSTACLES
+
+
+# Initialize the game
 def initialze_board () :
     game_board(20, 20)
     initialize_obstacle_location(MASTER_BOARD)
@@ -155,15 +180,6 @@ def initialze_board () :
     spawn_locations(MASTER_BOARD)
     debug_spawn_locations(MASTER_BOARD)
     return MASTER_BOARD
-
-
-
-
-# Function to find the location where the pit, monster,and treasure are
-
-# Generate random locations
-
-# Sets an NxN wall
 
 initialze_board()
 
