@@ -49,9 +49,12 @@ import random
 user_wall_choice = 1
 MASTER_OBSTACLES = {'W':[], 'M':[], 'H':[], 'T':[], 'P':[]}
 MASTER_BOARD = []
+MASTER_OBSTACLE_LOCATIONS = []
+MASTER_SPAWN_LOCATIONS = []
+DEBUG_SPAWN_LOCATIONS = []
 
 # Build NxN Wall 
-def wall (row, col) :
+def game_board (row, col) :
     my_wall = []
 
     i = 0
@@ -72,7 +75,7 @@ def wall (row, col) :
     return my_wall
 
 # Store a list of locations where a wall is
-def wall_locations (wall) :
+def obstacle_locations (wall) :
     my_list = []
     rows = len(wall)
     i = 0
@@ -82,8 +85,42 @@ def wall_locations (wall) :
         cols = len(wall[i])
         j = 0
         while j < cols:
-            if(wall[i][j] == 'W') :
+            if (wall[i][j] == 'W') or (wall[i][j] == 'P') or (wall[i][j] == 'T') or (wall[i][j] == 'M') or (wall[i][j] == ' '):
                 my_list[i].append(j)
+            j += 1
+        i += 1
+    return my_list
+
+def spawn_locations (wall) :
+    my_list = []
+    rows = len(wall)
+    i = 0
+    while i < rows:
+        #
+        my_list.append([])
+        cols = len(wall[i])
+        j = 0
+        while j < cols:
+            if (wall[i][j] == 'E') :
+                my_list[i].append(j)
+            j += 1
+        i += 1
+    return my_list
+
+def debug_spawn_locations (wall) :
+    my_list = []
+    rows = len(wall)
+    i = 0
+    while i < rows:
+        #
+        my_list.append([])
+        cols = len(wall[i])
+        j = 0
+        while j < cols:
+            if (wall[i][j] == 'E') :
+                my_list[i].append('')
+            else :
+                my_list[i].append(wall[i][j])
             j += 1
         i += 1
     return my_list
@@ -99,7 +136,9 @@ def initialize_obstacle_location (board) :
     while i < len(obstacles_list) :
         ran_row = random.sample(range(1, rows), 1)[0]
         ran_col = random.sample(range(1, cols), 1)[0]
+
         MASTER_OBSTACLES.update({obstacles_list[i] : [ran_row, ran_col]})
+
         MASTER_BOARD[ran_row][ran_col] = obstacles_list[i]
         
         i += 1
@@ -150,11 +189,14 @@ def set_obstacles (wall) :
 # Generate random locations
 
 # Sets an NxN wall
-MASTER_BOARD = wall(20, 20)
+MASTER_BOARD = game_board(20, 20)
 
+initialize_obstacle_location(MASTER_BOARD)
 
 # Creats a list of locations where there is a wall per row
-w_list = wall_locations(MASTER_BOARD)
+MASTER_OBSTACLE_LOCATIONS = obstacle_locations(MASTER_BOARD)
+MASTER_SPAWN_LOCATIONS = spawn_locations(MASTER_BOARD)
+DEBUG_SPAWN_LOCATIONS = debug_spawn_locations(MASTER_BOARD)
 
 
 
@@ -164,7 +206,6 @@ w_list = wall_locations(MASTER_BOARD)
 
 
 
-    
 
 
 
