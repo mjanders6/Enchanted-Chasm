@@ -138,7 +138,7 @@ def initialize_obstacle_location (board) :
     while i < len(obstacles_list) :
         ran_row = random.sample(range(1, rows), 1)[0]
         ran_col = random.sample(range(1, cols), 1)[0]
-
+        # Enforce the rules for obstacle locations
         MASTER_OBSTACLES.update({obstacles_list[i] : [ran_row, ran_col]})
 
         MASTER_BOARD[ran_row][ran_col] = obstacles_list[i]
