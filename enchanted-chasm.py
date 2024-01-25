@@ -109,25 +109,42 @@ def spawn_locations (wall) :
     return MASTER_SPAWN_LOCATIONS
 
 # Debug, clean view, to show where the obstacles are
-def debug_spawn_locations (wall) :
-    # NEED TO FIX
-    #my_list = []
-    rows = len(wall)
-    i = 0
-    while i < rows:
-        #
-        DEBUG_SPAWN_LOCATIONS.append([])
-        cols = len(wall[i])
-        j = 0
-        while j < cols:
-            if (wall[i][j] == 'E') :
-                DEBUG_SPAWN_LOCATIONS[i].append('')
-            else :
-                DEBUG_SPAWN_LOCATIONS[i].append(wall[i][j])
-            j += 1
-        i += 1
+def debug_spawn_locations () :
+    rows = len(MASTER_BOARD)
+
+    if len(DEBUG_SPAWN_LOCATIONS) > 0:
+        DEBUG_SPAWN_LOCATIONS.clear()
+        i = 0
+        while i < rows:
+            #
+            DEBUG_SPAWN_LOCATIONS.append([])
+            cols = len(MASTER_BOARD[i])
+            j = 0
+            while j < cols:
+                if (MASTER_BOARD[i][j] == 'E') :
+                    DEBUG_SPAWN_LOCATIONS[i].append('')
+                else :
+                    DEBUG_SPAWN_LOCATIONS[i].append(MASTER_BOARD[i][j])
+                j += 1
+            i += 1
+    else:
+        i = 0
+        while i < rows:
+            #
+            DEBUG_SPAWN_LOCATIONS.append([])
+            cols = len(MASTER_BOARD[i])
+            j = 0
+            while j < cols:
+                if (MASTER_BOARD[i][j] == 'E') :
+                    DEBUG_SPAWN_LOCATIONS[i].append('')
+                else :
+                    DEBUG_SPAWN_LOCATIONS[i].append(MASTER_BOARD[i][j])
+                j += 1
+            i += 1
+
     return DEBUG_SPAWN_LOCATIONS
 
+# Initialize the board with obstacles
 def initialize_obstacle_location (board) :
     obstacles_list = ['W','P','T', 'M']
     rows = len(board) - 1
@@ -178,7 +195,8 @@ def initialze_board () :
     initialize_obstacle_location(MASTER_BOARD)
     obstacle_locations(MASTER_BOARD)
     spawn_locations(MASTER_BOARD)
-    debug_spawn_locations(MASTER_BOARD)
+    spawn_hero()
+    debug_spawn_locations()
     return MASTER_BOARD
 
 initialze_board()
