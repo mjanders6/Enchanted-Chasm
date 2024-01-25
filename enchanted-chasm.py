@@ -55,75 +55,77 @@ DEBUG_SPAWN_LOCATIONS = []
 
 # Build NxN Wall 
 def game_board (row, col) :
-    my_wall = []
+    #my_wall = []
 
     i = 0
     while i < row:
         # Initialize the inner list for each row
-        my_wall.append([])
+        MASTER_BOARD.append([])
 
         j = 0
         while j < col:
             # 
             if (j == 0) or (j == col - 1) or (i == 0) or (i == row - 1):
-                my_wall[i].append('W')
+                MASTER_BOARD[i].append('W')
             else:
-                my_wall[i].append('E')
+                MASTER_BOARD[i].append('E')
             j += 1
 
         i += 1
-    return my_wall
+    return MASTER_BOARD
 
 # Store a list of locations where a wall is
 def obstacle_locations (wall) :
-    my_list = []
+    #my_list = []
     rows = len(wall)
     i = 0
     while i < rows:
         # 
-        my_list.append([])
+        MASTER_OBSTACLE_LOCATIONS.append([])
         cols = len(wall[i])
         j = 0
         while j < cols:
             if (wall[i][j] == 'W') or (wall[i][j] == 'P') or (wall[i][j] == 'T') or (wall[i][j] == 'M') or (wall[i][j] == ' '):
-                my_list[i].append(j)
+                MASTER_OBSTACLE_LOCATIONS[i].append(j)
             j += 1
         i += 1
-    return my_list
+    return MASTER_OBSTACLE_LOCATIONS
 
+# Catalog empty locations
 def spawn_locations (wall) :
-    my_list = []
+    #my_list = []
     rows = len(wall)
     i = 0
     while i < rows:
         #
-        my_list.append([])
+        MASTER_SPAWN_LOCATIONS.append([])
         cols = len(wall[i])
         j = 0
         while j < cols:
             if (wall[i][j] == 'E') :
-                my_list[i].append(j)
+                MASTER_SPAWN_LOCATIONS[i].append(j)
             j += 1
         i += 1
-    return my_list
+    return MASTER_SPAWN_LOCATIONS
 
+# Debug, clean view, to show where the obstacles are
 def debug_spawn_locations (wall) :
-    my_list = []
+    #my_list = []
     rows = len(wall)
     i = 0
     while i < rows:
         #
-        my_list.append([])
+        DEBUG_SPAWN_LOCATIONS.append([])
         cols = len(wall[i])
         j = 0
         while j < cols:
             if (wall[i][j] == 'E') :
-                my_list[i].append('')
+                DEBUG_SPAWN_LOCATIONS[i].append('')
             else :
-                my_list[i].append(wall[i][j])
+                DEBUG_SPAWN_LOCATIONS[i].append(wall[i][j])
             j += 1
         i += 1
-    return my_list
+    return DEBUG_SPAWN_LOCATIONS
 
 def initialize_obstacle_location (board) :
     obstacles_list = ['W','P','T', 'M']
@@ -146,57 +148,27 @@ def initialize_obstacle_location (board) :
     
     return MASTER_OBSTACLES
 
+def initialze_board () :
+    game_board(20, 20)
+    initialize_obstacle_location(MASTER_BOARD)
+    obstacle_locations(MASTER_BOARD)
+    spawn_locations(MASTER_BOARD)
+    debug_spawn_locations(MASTER_BOARD)
+    return MASTER_BOARD
 
-def set_obstacles (wall) :
-    obstacles_list = ['W','P','T','H', 'M']
-    obs_locations = {'W':[], 'P':[], 'H':[], 'T':[], 'P':[]}
-    rows = len(wall)
-    cols = len(wall[0]) - 1
 
-    i = 0
-    while i < len(obstacles_list) :
-        # create first set of random numbers for the row and column
-        ran_row_sample = random.sample(range(1, rows), 1)[0]
-        ran_col_sample = random.sample(range(1, cols), 1)[0]
 
-        # If the random row row and column fall on a wall, generate a new row and column
-        if wall[ran_row_sample][ran_col_sample] == 'W' :
-            ran_row_sample_loop = random.sample(range(1, rows), 1)[0]
-            ran_col_sample_loop = random.sample(range(1, cols), 1)[0]
-            # Change the value to the obstacle: W, H, T, P, or M
-            wall[ran_row_sample_loop][ran_col_sample_loop] = obstacles_list[i]
-            # Store the obstacle location in a dictionary to validaye obstacle constraints
-            obs_locations.update({obstacles_list[i] : [ran_row_sample_loop, ran_col_sample_loop]})
-
-            # Obstacle constraints
-            
-            
-        else :
-            # If the row and column do not fall on a Wall
-            # Change the value to the obstacle: W, H, T, P, or M
-            wall[ran_row_sample][ran_col_sample] = obstacles_list[i]
-            # Store the obstacle location in a dictionary to validaye obstacle constraints
-            obs_locations.update({obstacles_list[i] : [ran_row_sample, ran_col_sample]})
-        i += 1
-
-    print(obs_locations)
-    return [wall, obs_locations]
-
-###############
 
 # Function to find the location where the pit, monster,and treasure are
 
 # Generate random locations
 
 # Sets an NxN wall
-MASTER_BOARD = game_board(20, 20)
 
-initialize_obstacle_location(MASTER_BOARD)
+initialze_board()
 
 # Creats a list of locations where there is a wall per row
-MASTER_OBSTACLE_LOCATIONS = obstacle_locations(MASTER_BOARD)
-MASTER_SPAWN_LOCATIONS = spawn_locations(MASTER_BOARD)
-DEBUG_SPAWN_LOCATIONS = debug_spawn_locations(MASTER_BOARD)
+
 
 
 
