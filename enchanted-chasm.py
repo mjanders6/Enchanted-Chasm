@@ -48,6 +48,7 @@ import random
 #user_wall_choice = int(input('Enter the number of walls needed: '))
 user_wall_choice = 1
 MASTER_OBSTACLES = {'W':[], 'M':[], 'H':[], 'T':[], 'P':[]}
+MASTER_ENVIRONMENT_RELATIONSHIP = {'HM' : 3, 'HP' : 2, 'HT' : 2, 'PT' : 2, 'MT' :3 , 'MP' : 3} # Covers the relationship between Hero, Monster, Treasure, and Pit
 MASTER_BOARD = []
 MASTER_OBSTACLE_LOCATIONS = []
 MASTER_SPAWN_LOCATIONS = []
@@ -73,6 +74,12 @@ def game_board (row, col) :
 
         i += 1
     return MASTER_BOARD
+
+# Define the constraints when placing H, T, P, M on the board
+def obstacle_placement() :
+    #  Update MASTER_OBSTACLES to reflect the different relationships
+    
+    return MASTER_OBSTACLES
 
 # Store a list of locations where a wall is
 def obstacle_locations (wall) :
@@ -202,6 +209,8 @@ def initialze_board () :
 initialze_board()
 
 # Creats a list of locations where there is a wall per row
+
+
 
 
 
