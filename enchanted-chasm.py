@@ -92,16 +92,26 @@ def obstacle_check(object) :
     r_l = MASTER_OBSTACLES[object][0] - 3
     c_l = MASTER_OBSTACLES[object][1] - 3
 
+
+
     r_upper_bound = 2 * k_obs + 1 + r_l
     c_upper_bound = 2 * k_obs + 1 + c_l
 
+    #while r_l < r_upper_bound:
     if abs(r_l - MASTER_OBSTACLES[check_value][0]):
-            if abs(c_l - MASTER_OBSTACLES[check_value][1]) <= k_obs:
+        i = c_l
+        while i < c_upper_bound:
+            if abs(i - MASTER_OBSTACLES[check_value][1]) <= k_obs:
                 print('Choose new row')
+            i += 1
     else:
-            if abs(c_l - MASTER_OBSTACLES[check_value][1]) <= k_obs:
+        j = c_l
+        while j < c_upper_bound:
+            if abs(j - MASTER_OBSTACLES[check_value][1]) <= k_obs:
                 print('Choose new col')
+            j += 1
 
+        #r_l += 1
 
 
 # Store a list of locations where a wall is
