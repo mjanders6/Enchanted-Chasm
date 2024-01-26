@@ -49,7 +49,6 @@ import random
 #user_wall_choice = 1
 MASTER_OBSTACLES = {'W':[], 'M':[], 'H':[], 'T':[], 'P':[]}
 MASTER_ENVIRONMENT_RELATIONSHIP = {'HM' : 3, 'HP' : 2, 'HT' : 2, 'PT' : 2, 'MT' :3 , 'MP' : 3} # Covers the relationship between Hero, Monster, Treasure, and Pit
-MASTER_LOCATION_CHECK = {'NORTH':[], 'SOUTH':[], 'EAST':[], 'WEST':[]}
 MASTER_BOARD = []
 MASTER_OBSTACLE_LOCATIONS = []
 MASTER_SPAWN_LOCATIONS = []
@@ -82,44 +81,26 @@ def obstacle_check(object) :
     #  Update MASTER_OBSTACLES to reflect the different relationships
     lstKeys = list(MASTER_OBSTACLES.keys())
 
-    # Calculate the N, S, E, W locations and store them in MASTER_LOCATION_CHECK
+    # Constant for N spaces from obstacle being compared
+    k_obs = 3
+    check_value = 'T'
 
-    #result = {key: value for key, value in MASTER_ENVIRONMENT_RELATIONSHIP.items() if lst[i].lower() in key.lower()}
-    #MASTER_LOCATION_CHECK['NORTH'] = [MASTER_OBSTACLES[object][0] + CONSTRAINT, MASTER_OBSTACLES[object][1]]
-    #MASTER_LOCATION_CHECK['SOUTH'] = [MASTER_OBSTACLES[object][0] - CONSTRAINT, MASTER_OBSTACLES[object][1]]
-    #MASTER_LOCATION_CHECK['EAST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] - CONSTRAINT]
-    #MASTER_LOCATION_CHECK['WEST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] + CONSTRAINT]
+    # Calculate upper and lower bounds to check if an obstacle is N spaces close
+    l = []
+    r = MASTER_OBSTACLES[object][0]
+    c = MASTER_OBSTACLES[object][1]
+    r_l = MASTER_OBSTACLES[object][0] - 3
+    c_l = MASTER_OBSTACLES[object][1] - 3
 
-    #print(F'locations around {object} ({MASTER_OBSTACLES[object]}) | {MASTER_LOCATION_CHECK}')
-    #print(MASTER_OBSTACLES)
+    r_upper_bound = 2 * k_obs + 1 + r_l
+    c_upper_bound = 2 * k_obs + 1 + c_l
 
-    i = 0
-    while i < len(lstKeys) :
-        if lstKeys == 'M':
-            CONSTRAINT = 3
-            MASTER_LOCATION_CHECK['NORTH'] = [MASTER_OBSTACLES[object][0] + CONSTRAINT, MASTER_OBSTACLES[object][1]]
-            MASTER_LOCATION_CHECK['SOUTH'] = [MASTER_OBSTACLES[object][0] - CONSTRAINT, MASTER_OBSTACLES[object][1]]
-            MASTER_LOCATION_CHECK['EAST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] - CONSTRAINT]
-            MASTER_LOCATION_CHECK['WEST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] + CONSTRAINT]
-
-            S = MASTER_LOCATION_CHECK['SOUTH'][0]
-            N = MASTER_LOCATION_CHECK['NORTH'][0]
-
-            while S <= N + 1:
-                
-
-                S += 1
-
-
-        else:
-            CONSTRAINT = 2
-            MASTER_LOCATION_CHECK['NORTH'] = [MASTER_OBSTACLES[object][0] + CONSTRAINT, MASTER_OBSTACLES[object][1]]
-            MASTER_LOCATION_CHECK['SOUTH'] = [MASTER_OBSTACLES[object][0] - CONSTRAINT, MASTER_OBSTACLES[object][1]]
-            MASTER_LOCATION_CHECK['EAST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] - CONSTRAINT]
-            MASTER_LOCATION_CHECK['WEST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] + CONSTRAINT]
-
-        i += 1
-
+    if abs(r_l - MASTER_OBSTACLES[check_value][0]):
+            if abs(c_l - MASTER_OBSTACLES[check_value][1]) <= k_obs:
+                print('Choose new row')
+    else:
+            if abs(c_l - MASTER_OBSTACLES[check_value][1]) <= k_obs:
+                print('Choose new col')
 
 
 
@@ -142,7 +123,6 @@ def obstacle_locations (wall) :
 
 # Catalog empty locations
 def spawn_locations (wall) :
-    #my_list = []
     rows = len(wall)
     i = 0
     while i < rows:
@@ -239,12 +219,13 @@ def spawn_hero () :
 
 # Initialize the game
 def initialze_board () :
-    game_board(20,20)
+    game_board(20, 20)
     initialize_obstacle_location(MASTER_BOARD)
     obstacle_locations(MASTER_BOARD)
     spawn_locations(MASTER_BOARD)
     spawn_hero()
     debug_spawn_locations()
+    #obstacle_check('M')  # just debugging
 
 
 initialze_board()
