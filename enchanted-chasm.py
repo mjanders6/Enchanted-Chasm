@@ -46,13 +46,15 @@ List of Functions:
 import random
 
 #user_wall_choice = int(input('Enter the number of walls needed: '))
-user_wall_choice = 1
+#user_wall_choice = 1
 MASTER_OBSTACLES = {'W':[], 'M':[], 'H':[], 'T':[], 'P':[]}
 MASTER_ENVIRONMENT_RELATIONSHIP = {'HM' : 3, 'HP' : 2, 'HT' : 2, 'PT' : 2, 'MT' :3 , 'MP' : 3} # Covers the relationship between Hero, Monster, Treasure, and Pit
+MASTER_LOCATION_CHECK = {'NORTH':[], 'SOUTH':[], 'EAST':[], 'WEST':[]}
 MASTER_BOARD = []
 MASTER_OBSTACLE_LOCATIONS = []
 MASTER_SPAWN_LOCATIONS = []
 DEBUG_SPAWN_LOCATIONS = []
+HISTORICAL_MOVEMENTS = []
 
 # Build NxN Wall 
 def game_board (row, col) :
@@ -76,10 +78,27 @@ def game_board (row, col) :
     return MASTER_BOARD
 
 # Define the constraints when placing H, T, P, M on the board
-def obstacle_placement() :
+def obstacle_check(object) :
     #  Update MASTER_OBSTACLES to reflect the different relationships
-    
-    return MASTER_OBSTACLES
+    lst = list(MASTER_OBSTACLES.keys())
+
+    if object == 'M':
+        CONSTRAINT = 3
+    else:
+        CONSTRAINT = 2
+
+    # Calculate the N, S, E, W locations and store them in MASTER_LOCATION_CHECK
+
+    #result = {key: value for key, value in MASTER_ENVIRONMENT_RELATIONSHIP.items() if lst[i].lower() in key.lower()}
+    MASTER_LOCATION_CHECK['NORTH'] = [MASTER_OBSTACLES[object][0] + CONSTRAINT, MASTER_OBSTACLES[object][1]]
+    MASTER_LOCATION_CHECK['SOUTH'] = [MASTER_OBSTACLES[object][0] - CONSTRAINT, MASTER_OBSTACLES[object][1]]
+    MASTER_LOCATION_CHECK['EAST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] - CONSTRAINT]
+    MASTER_LOCATION_CHECK['WEST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] + CONSTRAINT]
+
+    print(F'locations around {object} ({MASTER_OBSTACLES[object]}) | {MASTER_LOCATION_CHECK}')
+    print(MASTER_OBSTACLES)
+
+
 
 # Store a list of locations where a wall is
 def obstacle_locations (wall) :
@@ -192,21 +211,29 @@ def spawn_hero () :
         MASTER_BOARD[ran_row][ran_col] = heros_list[i]
 
         i += 1
-
     return MASTER_OBSTACLES
 
 
 # Initialize the game
 def initialze_board () :
-    game_board(20, 20)
+    game_board(3,20)
     initialize_obstacle_location(MASTER_BOARD)
     obstacle_locations(MASTER_BOARD)
     spawn_locations(MASTER_BOARD)
     spawn_hero()
     debug_spawn_locations()
-    return MASTER_BOARD
+
 
 initialze_board()
+
+'''
+def colission(list1, list2)
+    for x,y in list1:
+        for a,b in list2:
+            if x == a and y == b
+                print(found wall)
+    
+'''
 
 # Creats a list of locations where there is a wall per row
 
@@ -218,11 +245,23 @@ initialze_board()
 
 
 
+# Explore the Chasm
+'''
+USER_INPUT = input(f'Are you ready to exploire?\nResponse:\n1. Y\n2. N')
 
 
+while USER_INPUT != 'N':
+    if (USER_INPUT == 'Y') :
+        initialze_board()
+        USER_INPUT = input(f'Want to move or cheat?\nResponse:\n1. Cheat\n2. Move\n3. End')
+        if (USER_INPUT == 1):
+            cheat = debug_spawn_locations()
+            for i in cheat:
+                print(i)
+    break
 
 
-
+'''
 
 
 
