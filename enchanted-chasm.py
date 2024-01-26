@@ -257,6 +257,7 @@ def initialze_board () :
 initialze_board()
 
 '''
+where list1 = [(x, y)]
 def colission(list1, list2)
     for x,y in list1:
         for a,b in list2:
