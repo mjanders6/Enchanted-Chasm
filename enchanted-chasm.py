@@ -80,23 +80,46 @@ def game_board (row, col) :
 # Define the constraints when placing H, T, P, M on the board
 def obstacle_check(object) :
     #  Update MASTER_OBSTACLES to reflect the different relationships
-    lst = list(MASTER_OBSTACLES.keys())
-
-    if object == 'M':
-        CONSTRAINT = 3
-    else:
-        CONSTRAINT = 2
+    lstKeys = list(MASTER_OBSTACLES.keys())
 
     # Calculate the N, S, E, W locations and store them in MASTER_LOCATION_CHECK
 
     #result = {key: value for key, value in MASTER_ENVIRONMENT_RELATIONSHIP.items() if lst[i].lower() in key.lower()}
-    MASTER_LOCATION_CHECK['NORTH'] = [MASTER_OBSTACLES[object][0] + CONSTRAINT, MASTER_OBSTACLES[object][1]]
-    MASTER_LOCATION_CHECK['SOUTH'] = [MASTER_OBSTACLES[object][0] - CONSTRAINT, MASTER_OBSTACLES[object][1]]
-    MASTER_LOCATION_CHECK['EAST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] - CONSTRAINT]
-    MASTER_LOCATION_CHECK['WEST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] + CONSTRAINT]
+    #MASTER_LOCATION_CHECK['NORTH'] = [MASTER_OBSTACLES[object][0] + CONSTRAINT, MASTER_OBSTACLES[object][1]]
+    #MASTER_LOCATION_CHECK['SOUTH'] = [MASTER_OBSTACLES[object][0] - CONSTRAINT, MASTER_OBSTACLES[object][1]]
+    #MASTER_LOCATION_CHECK['EAST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] - CONSTRAINT]
+    #MASTER_LOCATION_CHECK['WEST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] + CONSTRAINT]
 
-    print(F'locations around {object} ({MASTER_OBSTACLES[object]}) | {MASTER_LOCATION_CHECK}')
-    print(MASTER_OBSTACLES)
+    #print(F'locations around {object} ({MASTER_OBSTACLES[object]}) | {MASTER_LOCATION_CHECK}')
+    #print(MASTER_OBSTACLES)
+
+    i = 0
+    while i < len(lstKeys) :
+        if lstKeys == 'M':
+            CONSTRAINT = 3
+            MASTER_LOCATION_CHECK['NORTH'] = [MASTER_OBSTACLES[object][0] + CONSTRAINT, MASTER_OBSTACLES[object][1]]
+            MASTER_LOCATION_CHECK['SOUTH'] = [MASTER_OBSTACLES[object][0] - CONSTRAINT, MASTER_OBSTACLES[object][1]]
+            MASTER_LOCATION_CHECK['EAST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] - CONSTRAINT]
+            MASTER_LOCATION_CHECK['WEST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] + CONSTRAINT]
+
+            S = MASTER_LOCATION_CHECK['SOUTH'][0]
+            N = MASTER_LOCATION_CHECK['NORTH'][0]
+
+            while S <= N + 1:
+                
+
+                S += 1
+
+
+        else:
+            CONSTRAINT = 2
+            MASTER_LOCATION_CHECK['NORTH'] = [MASTER_OBSTACLES[object][0] + CONSTRAINT, MASTER_OBSTACLES[object][1]]
+            MASTER_LOCATION_CHECK['SOUTH'] = [MASTER_OBSTACLES[object][0] - CONSTRAINT, MASTER_OBSTACLES[object][1]]
+            MASTER_LOCATION_CHECK['EAST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] - CONSTRAINT]
+            MASTER_LOCATION_CHECK['WEST'] = [MASTER_OBSTACLES[object][0], MASTER_OBSTACLES[object][1] + CONSTRAINT]
+
+        i += 1
+
 
 
 
@@ -216,7 +239,7 @@ def spawn_hero () :
 
 # Initialize the game
 def initialze_board () :
-    game_board(3,20)
+    game_board(20,20)
     initialize_obstacle_location(MASTER_BOARD)
     obstacle_locations(MASTER_BOARD)
     spawn_locations(MASTER_BOARD)
