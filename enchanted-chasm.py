@@ -77,7 +77,7 @@ def game_board (row, col) :
     return MASTER_BOARD
 
 # Define the constraints when placing H, T, P, M on the board
-def obstacle_check(object) :
+'''def obstacle_check(object) :
     #  Update MASTER_OBSTACLES to reflect the different relationships
     lstKeys = list(MASTER_OBSTACLES.keys())
 
@@ -112,6 +112,22 @@ def obstacle_check(object) :
             j += 1
 
         #r_l += 1
+'''
+
+def obstacle_check(list1, list2, threshold=2):
+
+    if len(list1) != len(list2):
+        return "Lists are not of the same length."
+
+    for point1, point2 in zip(list1, list2):
+        x1, y1 = point1
+        x2, y2 = point2
+
+        if abs(x1 - x2) <= threshold and abs(y1 - y2) <= threshold:
+            return "Need to find a new location"
+        else:
+            return f"Dont need to move"
+
 
 
 # Store a list of locations where a wall is
@@ -196,7 +212,7 @@ def initialize_obstacle_location (board) :
         ran_row = random.sample(range(1, rows), 1)[0]
         ran_col = random.sample(range(1, cols), 1)[0]
         # Enforce the rules for obstacle locations
-        MASTER_OBSTACLES.update({obstacles_list[i] : [ran_row, ran_col]})
+        MASTER_OBSTACLES.update({obstacles_list[i] : [(ran_row, ran_col)]})
 
         MASTER_BOARD[ran_row][ran_col] = obstacles_list[i]
         
@@ -219,7 +235,7 @@ def spawn_hero () :
         ran_col = random.choice(MASTER_SPAWN_LOCATIONS[ran_row])
         #ran_col = random.sample(range(1, cols), 1)[0]
         # Enforce the rules for obstacle locations
-        MASTER_OBSTACLES.update({heros_list[i]: [ran_row, ran_col]})
+        MASTER_OBSTACLES.update({heros_list[i]: [(ran_row, ran_col)]})
 
         MASTER_BOARD[ran_row][ran_col] = heros_list[i]
 
