@@ -73,30 +73,39 @@ def game_board (row, col) :
         i += 1
     return MASTER_BOARD
 
-def obstacle_check(object, threshold=2):
+def obstacle_check(object, threshold=3):
     list1 = MASTER_OBSTACLES[object]
     lstKeys = list(MASTER_OBSTACLES.keys())
-
+    check_response = int()
     i = 0
     while (i < len(lstKeys)) :
+
         if (lstKeys[i] != object) and (lstKeys[i] != 'W'):
 
             list2 = MASTER_OBSTACLES[lstKeys[i]]
-            print(i, lstKeys[i])
 
             if len(list1) != len(list2):
-                return "Lists are not of the same length."
+                return 'Lists are not of the same length.'
 
             for point1, point2 in zip(list1, list2):
+
                 x1, y1 = point1
                 x2, y2 = point2
 
                 if abs(x1 - x2) <= threshold and abs(y1 - y2) <= threshold:
-                    return True
+                    check_response = 1
                 else:
-                    continue
+                    check_response = 0
+
+                return check_response
 
         i += 1
+
+
+
+
+
+
 
 
 
@@ -181,32 +190,44 @@ def initialize_obstacle_location () :
         # If not M -> threshhold is 2
     #
     #
-    #
-    MASTER_OBSTACLES.clear()
-    obstacles_list = ['W','P', 'M']
+    # Initialize spawn locations
+    spawn_locations()
+    obstacles_list = ['W','P', 'M', 'H']
+
     rows = len(MASTER_BOARD) - 1
     cols = len(MASTER_BOARD[0]) - 1
 
     ran_row = random.sample(range(1, rows), 1)[0]
-    ran_col = random.sample(range(1, cols), 1)[0]
+    ran_col = random.choice(MASTER_SPAWN_LOCATIONS[ran_row])
 
     MASTER_OBSTACLES.update({'T' : [(ran_row, ran_col)]})
     MASTER_BOARD[ran_row][ran_col] = 'T'
 
+
     i = 0 
     while i < len(obstacles_list) :
         ran_row = random.sample(range(1, rows), 1)[0]
-        ran_col = random.sample(range(1, cols), 1)[0]
+        ran_col = random.choice(MASTER_SPAWN_LOCATIONS[ran_row])
         # Enforce the rules for obstacle locations
 
-        #MASTER_OBSTACLES.update({obstacles_list[i] : [(ran_row, ran_col)]})
+        check = obstacle_check(obstacles_list[i], threshold=3)
+        print(check)
 
-        #MASTER_BOARD[ran_row][ran_col] = obstacles_list[i]
-        
+
+        ran_row = random.sample(range(1, rows), 1)[0]
+        ran_col = random.choice(MASTER_SPAWN_LOCATIONS[ran_row])
+
+        MASTER_OBSTACLES.update({obstacles_list[i] : [(ran_row, ran_col)]})
+        MASTER_BOARD[ran_row][ran_col] = obstacles_list[i]
+
+
+
+
+
+        spawn_locations()
         i += 1
 
-    
-    return MASTER_OBSTACLES
+
 
 def spawn_hero () :
     heros_list = ['H']
@@ -258,7 +279,6 @@ def initialze_board () :
     initialize_obstacle_location()
     obstacle_locations()
     spawn_locations()
-    spawn_hero()
     debug_spawn_locations()
     #obstacle_check('M')  # just debugging
 
