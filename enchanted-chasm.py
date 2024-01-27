@@ -47,7 +47,7 @@ import random
 #user_wall_choice = int(input('Enter the number of walls needed: '))
 #user_wall_choice = 1
 #MASTER_OBSTACLES = {'W':[(3, 4)], 'M':[(3, 6)], 'H':[(5, 12)], 'T':[(3, 12)], 'P':[(1, 15)]}
-MASTER_OBSTACLES = {'W':[], 'M':[], 'H':[], 'T':[], 'P':[]}
+MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[], 'W':[], }
 MASTER_BOARD = []
 OBSTACLE_LOCATIONS = []
 SPAWN_LOCATIONS = []
@@ -79,8 +79,8 @@ def game_board (row, col) :
 
 def obstacle_check(object1, object2, threshold):
     list1 = MASTER_OBSTACLES[object1]
-    #list2 = MASTER_OBSTACLES[object2]
-    list2 = object2
+    list2 = MASTER_OBSTACLES[object2]
+    #list2 = object2
 
 
     if len(list1) != len(list2):
@@ -188,7 +188,6 @@ def initialize_obstacle_location () :
     #
     # Initialize spawn locations
     spawn_locations()
-    #obstacles_list = ['W','P', 'M', 'H']
     obstacles_list = list(MASTER_OBSTACLES)
 
     rows = len(MASTER_BOARD) - 1
@@ -202,20 +201,24 @@ def initialize_obstacle_location () :
     MASTER_OBSTACLES.update({'T' : [(ran_row, ran_col)]})
     MASTER_BOARD[ran_row][ran_col] = 'T'
 
-    i = 0
-    while i < len(obstacles_list):
-        for j in obstacles_list:
+
+    #new_list = ['W', 'M', 'T', 'H', 'P']
+    obs_list = list(MASTER_OBSTACLES)
+    new_list = []
+    while len(new_list) < len(obs_list):
+        for j in obs_list:
+            #print(new_list)
             spawn_object(j)
-            j_list = MASTER_OBSTACLES[j]
-            print(obstacles_list)
-            if obstacle_check('T', j_list, 3) != 0 :
-                spawn_object(j)
-                print(obstacle_check('T', j_list, 3), j)
-                i = i
-            else:
-                spawn_object(j)
-                obstacles_list.remove(j)
-                i += 1
+            new_list.append(j)
+            x = 0
+            while x < len(new_list):
+                for i in new_list:
+                    if (i != j) :
+                        print(j, x, i)
+                        print(obstacle_check(j, i, 3))
+                    x += 1
+
+
 
 
 
@@ -252,7 +255,7 @@ def spawn_object (object) :
 
     ran_row = random.sample(range(1, rows), 1)[0]
     ran_col = random.choice(SPAWN_LOCATIONS[ran_row])
-
+    # Check to see if location is not within a certain amount of spaces
     MASTER_OBSTACLES.update({ object : [(ran_row, ran_col)]})
     MASTER_BOARD[ran_row][ran_col] = object
 
