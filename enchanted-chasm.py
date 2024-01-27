@@ -79,7 +79,8 @@ def game_board (row, col) :
 
 def obstacle_check(object1, object2, threshold):
     list1 = MASTER_OBSTACLES[object1]
-    list2 = MASTER_OBSTACLES[object2]
+    #list2 = MASTER_OBSTACLES[object2]
+    list2 = object2
 
 
     if len(list1) != len(list2):
@@ -201,13 +202,21 @@ def initialize_obstacle_location () :
     MASTER_OBSTACLES.update({'T' : [(ran_row, ran_col)]})
     MASTER_BOARD[ran_row][ran_col] = 'T'
 
-    for j in obstacles_list:
-        check = obstacle_check('T', j, 3)
-        if j != 'T' and obstacle_check('T', j, 3) != 1:
-
-            print(check)
-            #while (obstacle_check(i, j, 3) != 1) and i != j:
+    i = 0
+    while i < len(obstacles_list):
+        for j in obstacles_list:
             spawn_object(j)
+            j_list = MASTER_OBSTACLES[j]
+            print(obstacles_list)
+            if obstacle_check('T', j_list, 3) != 0 :
+                spawn_object(j)
+                print(obstacle_check('T', j_list, 3), j)
+                i = i
+            else:
+                spawn_object(j)
+                obstacles_list.remove(j)
+                i += 1
+
 
 
 
