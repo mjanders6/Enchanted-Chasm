@@ -21,8 +21,7 @@ The Cave (20x1 squares) must contain the following: Hero, Walls, Pit, Monster, a
 
 Pseudo Code
     Build the board
-    Build  the interrior walls
-    Load the walls into the board
+    Build the interior wall
     Create a list of locations on where the walls are
     Define obstacle locations within a dictionary
         compare dictioary values to ensure
@@ -43,9 +42,7 @@ List of Functions:
 
 '''
 import random
-
-#user_wall_choice = int(input('Enter the number of walls needed: '))
-#user_wall_choice = 1
+# NUM_WALLS = 1 # for debugging
 MASTER_OBSTACLES = {'T':0, 'M':0, 'H':0, 'P':0}
 MASTER_BOARD = []
 OBSTACLE_LOCATIONS = []
@@ -154,7 +151,7 @@ def initialize_obstacle_location () :
     # initialize obstacles list
     # initialize # of row/# of column
     # initiate first obstacle
-    # create location for next object from list of spawnable locations
+    # create location for next object from list of spawn-able locations
         # If M -> threshhold is 3
         # If not M -> threshhold is 2
     #
@@ -173,7 +170,7 @@ def initialize_obstacle_location () :
             if abs(i - (i - 1)) < 3:
                 # Swap elements to satisfy the condition
                 #if MASTER_BOARD[i] != 'W':
-                MASTER_BOARD[i], MASTER_BOARD[i - 2] = MASTER_BOARD[i - 2], MASTER_BOARD[i]
+                MASTER_BOARD[i], MASTER_BOARD[i - 5] = MASTER_BOARD[i - 5], MASTER_BOARD[i]
 
     num_walls = 0
     while num_walls <  NUM_WALLS:
@@ -207,7 +204,7 @@ def initialze_board () :
     spawn_locations()
     debug_spawn_locations()
 
-#initialze_board()
+initialze_board()
 
 # Explore the Chasm
 USER_INPUT = input(f'Are you ready to exploire?\nResponse:\n1. Y\n2. N')

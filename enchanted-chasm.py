@@ -44,9 +44,6 @@ List of Functions:
 '''
 import random
 
-#user_wall_choice = int(input('Enter the number of walls needed: '))
-#user_wall_choice = 1
-#MASTER_OBSTACLES = {'W':[(3, 4)], 'M':[(3, 6)], 'H':[(5, 12)], 'T':[(3, 12)], 'P':[(1, 15)]}
 MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[]}
 MASTER_BOARD = []
 OBSTACLE_LOCATIONS = []
