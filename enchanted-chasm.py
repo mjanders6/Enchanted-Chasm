@@ -47,7 +47,7 @@ import random
 #user_wall_choice = int(input('Enter the number of walls needed: '))
 #user_wall_choice = 1
 #MASTER_OBSTACLES = {'W':[(3, 4)], 'M':[(3, 6)], 'H':[(5, 12)], 'T':[(3, 12)], 'P':[(1, 15)]}
-MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[], 'W':[], }
+MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[]}
 MASTER_BOARD = []
 OBSTACLE_LOCATIONS = []
 SPAWN_LOCATIONS = []
@@ -99,7 +99,7 @@ def obstacle_check(object1, object2, threshold):
         return check_response
 
 
-# Store a list of locations where a wall is
+# Store a list of locations where a location is not blank
 def obstacle_locations () :
     OBSTACLE_LOCATIONS.clear()
     MASTER_OBSTACLE_LOCATIONS.clear()
@@ -205,6 +205,7 @@ def initialize_obstacle_location () :
     #new_list = ['W', 'M', 'T', 'H', 'P']
     obs_list = list(MASTER_OBSTACLES)
     new_list = []
+    # Loop to build a list to compare with adding elements to the board.
     while len(new_list) < len(obs_list):
         for j in obs_list:
             #print(new_list)
@@ -214,15 +215,10 @@ def initialize_obstacle_location () :
             while x < len(new_list):
                 for i in new_list:
                     if (i != j) :
-                        print(j, x, i)
-                        print(obstacle_check(j, i, 3))
+                        if obstacle_check(j, i, 3) == 0:
+                            print(j, x, i, obstacle_check(j, i, 3))
+
                     x += 1
-
-
-
-
-
-
 
 def spawn_hero () :
     heros_list = ['H']
