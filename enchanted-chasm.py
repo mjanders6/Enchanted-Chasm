@@ -190,35 +190,15 @@ def initialize_obstacle_location () :
     spawn_locations()
     obstacles_list = list(MASTER_OBSTACLES)
 
+    for key, value in MASTER_OBSTACLES.items():
+        spawn_object(key)
+
     rows = len(MASTER_BOARD) - 1
     cols = len(MASTER_BOARD[0]) - 1
 
-    # Initialize random row/col for initial placement
-    ran_row = random.sample(range(1, rows), 1)[0]
-    ran_col = random.choice(SPAWN_LOCATIONS[ran_row])
-
-    # Initialize first spawn loction
-    MASTER_OBSTACLES.update({'T' : [(ran_row, ran_col)]})
-    MASTER_BOARD[ran_row][ran_col] = 'T'
+    # Iterate over the list to ensure each element is not less than 3 spaces from each other
 
 
-    #new_list = ['W', 'M', 'T', 'H', 'P']
-    obs_list = list(MASTER_OBSTACLES)
-    new_list = []
-    # Loop to build a list to compare with adding elements to the board.
-    while len(new_list) < len(obs_list):
-        for j in obs_list:
-            #print(new_list)
-            spawn_object(j)
-            new_list.append(j)
-            x = 0
-            while x < len(new_list):
-                for i in new_list:
-                    if (i != j) :
-                        if obstacle_check(j, i, 3) == 0:
-                            print(j, x, i, obstacle_check(j, i, 3))
-
-                    x += 1
 
 def spawn_hero () :
     heros_list = ['H']
