@@ -158,7 +158,8 @@ def initialize_obstacle_location () :
     #
     # Initialize spawn locations
     spawn_locations()
-    obstacles_list = list(MASTER_OBSTACLES)
+    obstacles_list = list(MASTER_OBSTACLES) # MASTER_OBSTACLES.items()
+    obstacles_list.remove('T')
     my_list = MASTER_BOARD
 
     for key, value in MASTER_OBSTACLES.items():
@@ -167,10 +168,10 @@ def initialize_obstacle_location () :
     # Iterate over the list to ensure each element is not less than 3 spaces from each other
     for i in range(1, len(MASTER_BOARD)):
         if MASTER_BOARD[i] != 'E' and MASTER_BOARD[i - 1] != 'E' and MASTER_BOARD[i] != 'W':
-            if abs(i - (i - 1)) < 3:
+            if abs(i - (i - 1)) < 4:
                 # Swap elements to satisfy the condition
-                #if MASTER_BOARD[i] != 'W':
-                MASTER_BOARD[i], MASTER_BOARD[i - 5] = MASTER_BOARD[i - 5], MASTER_BOARD[i]
+                if MASTER_BOARD[i] != 'W':
+                    MASTER_BOARD[i], MASTER_BOARD[i - 2] = MASTER_BOARD[i - 2], MASTER_BOARD[i]
 
     num_walls = 0
     while num_walls < NUM_WALLS:
