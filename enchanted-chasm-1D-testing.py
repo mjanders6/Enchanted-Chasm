@@ -173,7 +173,7 @@ def initialize_obstacle_location () :
                 MASTER_BOARD[i], MASTER_BOARD[i - 5] = MASTER_BOARD[i - 5], MASTER_BOARD[i]
 
     num_walls = 0
-    while num_walls <  NUM_WALLS:
+    while num_walls < NUM_WALLS:
         my_list[random.choice(SPAWN_LOCATIONS)] = 'W'
         spawn_locations()
         num_walls += 1
@@ -204,7 +204,7 @@ def initialze_board () :
     spawn_locations()
     debug_spawn_locations()
 
-initialze_board()
+#initialze_board()
 
 # Explore the Chasm
 USER_INPUT = input(f'Are you ready to exploire?\nResponse:\n1. Y\n2. N')
