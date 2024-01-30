@@ -42,13 +42,14 @@ List of Functions:
 
 '''
 import random
-# NUM_WALLS = 1 # for debugging
+NUM_WALLS = 1 # for debugging
 MASTER_OBSTACLES = {'T':0, 'M':0, 'H':0, 'P':0}
 MASTER_BOARD = []
 OBSTACLE_LOCATIONS = []
 SPAWN_LOCATIONS = []
 DEBUG_SPAWN_LOCATIONS = []
 HISTORICAL_MOVEMENTS = []
+OBSTACLE_CHECK_LIST = {'T':0, 'M':0, 'H':0, 'P':0}
 
 # Used to compare a list of tuples
 MASTER_OBSTACLE_LOCATIONS = []
@@ -66,27 +67,6 @@ def game_board (col) :
         j += 1
 
     return MASTER_BOARD
-
-def obstacle_check(object1, object2, threshold):
-    list1 = MASTER_OBSTACLES[object1]
-    list2 = MASTER_OBSTACLES[object2]
-    #list2 = object2
-
-
-    if len(list1) != len(list2):
-        return 'Lists are not of the same length.'
-
-    for point1, point2 in zip(list1, list2):
-
-        x1, y1 = point1
-        x2, y2 = point2
-        check_response = int()
-        if abs(x1 - x2) <= threshold and abs(y1 - y2) <= threshold:
-            check_response = 1
-        else:
-            check_response = 0
-
-        return check_response
 
 # Store a list of locations where a location is not blank
 def obstacle_locations () :
@@ -146,42 +126,94 @@ def debug_spawn_locations () :
 
     return DEBUG_SPAWN_LOCATIONS
 
+# Check
+def obstacle_check(object):
+    #  Update MASTER_OBSTACLES to reflect the different relationships
+    lstKeys = list(MASTER_OBSTACLES.keys())
+    OBSTACLE_CHECK_LIST.clear()
+    # Constant for N spaces from obstacle being compared
+    if object == 'M':
+        k_obs = 3
+    else:
+        k_obs = 2
+    # Calculate upper and lower bounds to check if an obstacle is N spaces close
+    c = MASTER_OBSTACLES[object]
+    c_l = MASTER_OBSTACLES[object] - k_obs
+    c_upper_bound = 2 * k_obs + 1 + c_l
+
+    while c_l <= c_upper_bound:
+        if c_l >= 0 and c_l < 20 and DEBUG_SPAWN_LOCATIONS[c_l] != object and DEBUG_SPAWN_LOCATIONS[c_l] != '' and DEBUG_SPAWN_LOCATIONS[c_l] != 'W':
+            #print(DEBUG_SPAWN_LOCATIONS[r][c_l])
+            OBSTACLE_CHECK_LIST.update({DEBUG_SPAWN_LOCATIONS[c_l]: c_l})
+        c_l += 1
+
+
+    #print(f'{object} | {OBSTACLE_CHECK_LIST}')
+
+    for key, value in OBSTACLE_CHECK_LIST.items():
+        while abs(value - c) < k_obs:
+            return 1
+
+    '''for key, value in OBSTACLE_CHECK_LIST.items():
+        if key == 'P' or key == 'T' or key == 'H' and  key == 'M':
+            while abs(value - c) < k_obs:
+                return 1
+            if key == 'P' or key == 'T' and key == 'M':
+                while abs(value - c) < k_obs:
+                    return 1
+                if key == 'P' or key == 'T':
+                    while abs(value - c) < k_obs:
+                        return 1
+                    if key == 'P':
+                        while abs(value - c) < k_obs:
+                            return 1'''
+
+
+
 # Initialize the board with obstacles
 def initialize_obstacle_location () :
-    # initialize obstacles list
-    # initialize # of row/# of column
-    # initiate first obstacle
-    # create location for next object from list of spawn-able locations
-        # If M -> threshhold is 3
-        # If not M -> threshhold is 2
-    #
-    #
-    # Initialize spawn locations
+    # Initialize variables
+    obj_list = ['P', 'M', 'H']
+    spaces = 2
+    # The number of walls must be obtained by the user (at least three(3)… the ends and at least one interior)
+    user_input = 1  # input(f'Are you ready to exploire?\nResponse:\n1. Y\n2. N')
+    spawn_wall('W')
+    # The Monster must not be placed within three(3) squares of the Treasure and Pit
+    spawn_object('T')
+
+    for i in obj_list:
+        spawn_object(i)
+        while obstacle_check(i) == 1:
+            print(i , OBSTACLE_CHECK_LIST)
+            for index, value in enumerate(DEBUG_SPAWN_LOCATIONS):
+                if value == i:
+                    print(index, value)
+                    DEBUG_SPAWN_LOCATIONS.pop(index)
+                    spawn_object(i)
+            print('spawn again')
+
+
+
+
+
+    # The Pit must not be placed within two(2) squares from the Treasure
+
+    # The Hero must not be placed a.) within three(3) squares from the Monster and b.) within two(2) squares from the Pit and Treasure
+
+    # Hero, Treasure, Pit, and Monster cannot be placed within a Wall
+
+# Spawn a wall
+def spawn_wall(object) :
     spawn_locations()
-    obstacles_list = list(MASTER_OBSTACLES) # MASTER_OBSTACLES.items()
-    obstacles_list.remove('T')
-    my_list = MASTER_BOARD
 
-    for key, value in MASTER_OBSTACLES.items():
-        spawn_object(key)
+    ran_col = random.choice(SPAWN_LOCATIONS)
+    # place W on the board
+    MASTER_BOARD[ran_col] = object
 
-    # Iterate over the list to ensure each element is not less than 3 spaces from each other
-    for i in range(1, len(MASTER_BOARD)):
-        if MASTER_BOARD[i] != 'E' and MASTER_BOARD[i - 1] != 'E' and MASTER_BOARD[i] != 'W':
-            if abs(i - (i - 1)) < 4:
-                # Swap elements to satisfy the condition
-                if MASTER_BOARD[i] != 'W':
-                    MASTER_BOARD[i], MASTER_BOARD[i - 2] = MASTER_BOARD[i - 2], MASTER_BOARD[i]
-
-    num_walls = 0
-    while num_walls < NUM_WALLS:
-        my_list[random.choice(SPAWN_LOCATIONS)] = 'W'
-        spawn_locations()
-        num_walls += 1
-
-    for index, value in enumerate(MASTER_BOARD):
-        if value in MASTER_OBSTACLES:
-            MASTER_OBSTACLES[value] = index
+    # Update tables
+    obstacle_locations()
+    debug_spawn_locations()
+    spawn_locations()
 
 # Spawn an object H, M, W, T, P
 def spawn_object (object) :
@@ -205,8 +237,9 @@ def initialze_board () :
     spawn_locations()
     debug_spawn_locations()
 
-#initialze_board()
+initialze_board()
 
+'''
 # Explore the Chasm
 USER_INPUT = input(f'Are you ready to exploire?\nResponse:\n1. Y\n2. N')
 
@@ -219,7 +252,7 @@ while USER_INPUT != 'N' or USER_INPUT != 'n':
         else :
             initialze_board()
     break
-
+'''
 
 
 

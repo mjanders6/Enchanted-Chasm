@@ -232,16 +232,10 @@ def initialize_obstacle_location () :
     for key, value in MASTER_OBSTACLES.items():
         spawn_object(key)
 
-    '''    for i in obstacles:
-            while obstacle_check(i, 'T') != 1:
-                spawn_object(i)'''
-
     rows = len(MASTER_BOARD) - 1
     cols = len(MASTER_BOARD[0]) - 1
 
     # Iterate over the list to ensure each element is not less than 3 spaces from each other
-
-
 
 def spawn_hero () :
     heros_list = ['H']
