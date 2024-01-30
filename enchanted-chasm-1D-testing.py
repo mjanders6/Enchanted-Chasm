@@ -185,9 +185,9 @@ def initialize_obstacle_location () :
         spawn_object(i)
         while obstacle_check(i) == 1:
             print(i , OBSTACLE_CHECK_LIST)
-            for index, value in enumerate(DEBUG_SPAWN_LOCATIONS):
+            '''for index, value in enumerate(DEBUG_SPAWN_LOCATIONS):
                 if value == i:
-                    print(i, index, value)
+                    print(i, index, value)'''
 
             spawn_object(i)
             print('spawn again')
