@@ -185,7 +185,8 @@ def initialize_obstacle_location () :
         spawn_object(i)
         while obstacle_check(i) == 1:
             print(i , OBSTACLE_CHECK_LIST)
-            DEBUG_SPAWN_LOCATIONS[:] = [value for value in DEBUG_SPAWN_LOCATIONS if value not in i]
+            #DEBUG_SPAWN_LOCATIONS[:] = [value for value in DEBUG_SPAWN_LOCATIONS if value not in i]
+            DEBUG_SPAWN_LOCATIONS.remove(i)
 
             spawn_object(i)
             print('spawn again')
