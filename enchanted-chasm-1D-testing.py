@@ -150,11 +150,11 @@ def obstacle_check(object):
 
     #print(f'{object} | {OBSTACLE_CHECK_LIST}')
 
-    for key, value in OBSTACLE_CHECK_LIST.items():
-        while abs(value - c) < k_obs:
-            return 1
-
     '''for key, value in OBSTACLE_CHECK_LIST.items():
+        while abs(value - c) < k_obs:
+            return 1'''
+
+    for key, value in OBSTACLE_CHECK_LIST.items():
         if key == 'P' or key == 'T' or key == 'H' and  key == 'M':
             while abs(value - c) < k_obs:
                 return 1
@@ -166,7 +166,7 @@ def obstacle_check(object):
                         return 1
                     if key == 'P':
                         while abs(value - c) < k_obs:
-                            return 1'''
+                            return 1
 
 
 
@@ -187,9 +187,9 @@ def initialize_obstacle_location () :
             print(i , OBSTACLE_CHECK_LIST)
             for index, value in enumerate(DEBUG_SPAWN_LOCATIONS):
                 if value == i:
-                    print(index, value)
-                    DEBUG_SPAWN_LOCATIONS.pop(index)
-                    spawn_object(i)
+                    print(i, index, value)
+
+            spawn_object(i)
             print('spawn again')
 
 
