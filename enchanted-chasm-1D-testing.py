@@ -139,7 +139,7 @@ def obstacle_check(object):
     # Calculate upper and lower bounds to check if an obstacle is N spaces close
     c = MASTER_OBSTACLES[object]
     c_l = MASTER_OBSTACLES[object] - k_obs
-    c_upper_bound = 2 * k_obs + 1 + c_l
+    c_upper_bound = MASTER_OBSTACLES[object] + k_obs
 
     while c_l <= c_upper_bound:
         if c_l >= 0 and c_l < 20 and DEBUG_SPAWN_LOCATIONS[c_l] != object and DEBUG_SPAWN_LOCATIONS[c_l] != '' and DEBUG_SPAWN_LOCATIONS[c_l] != 'W':
@@ -150,11 +150,11 @@ def obstacle_check(object):
 
     #print(f'{object} | {OBSTACLE_CHECK_LIST}')
 
-    '''for key, value in OBSTACLE_CHECK_LIST.items():
-        while abs(value - c) < k_obs:
-            return 1'''
-
     for key, value in OBSTACLE_CHECK_LIST.items():
+        while abs(value - c) < k_obs:
+            return 1
+
+    '''for key, value in OBSTACLE_CHECK_LIST.items():
         if key == 'P' or key == 'T' or key == 'H' and  key == 'M':
             while abs(value - c) < k_obs:
                 return 1
@@ -166,12 +166,12 @@ def obstacle_check(object):
                         return 1
                     if key == 'P':
                         while abs(value - c) < k_obs:
-                            return 1
-
+                            return 1'''
 
 
 # Initialize the board with obstacles
 def initialize_obstacle_location () :
+    global DEBUG_SPAWN_LOCATIONS
     # Initialize variables
     obj_list = ['P', 'M', 'H']
     spaces = 2
@@ -185,9 +185,7 @@ def initialize_obstacle_location () :
         spawn_object(i)
         while obstacle_check(i) == 1:
             print(i , OBSTACLE_CHECK_LIST)
-            '''for index, value in enumerate(DEBUG_SPAWN_LOCATIONS):
-                if value == i:
-                    print(i, index, value)'''
+            DEBUG_SPAWN_LOCATIONS[:] = [value for value in DEBUG_SPAWN_LOCATIONS if value not in i]
 
             spawn_object(i)
             print('spawn again')
