@@ -178,11 +178,11 @@ def initialize_obstacle_location () :
     # The number of walls must be obtained by the user (at least three(3)… the ends and at least one interior)
     user_input = 1  # input(f'Are you ready to exploire?\nResponse:\n1. Y\n2. N')
 
-    wall_num = 0
+    '''wall_num = 0
     while wall_num < NUM_WALLS:
         spawn_wall('W')
-        wall_num += 1
-
+        wall_num += 1'''
+    spawn_wall('W', 1)
     # The Monster must not be placed within three(3) squares of the Treasure and Pit
     spawn_object('T')
 
@@ -210,13 +210,16 @@ def initialize_obstacle_location () :
     # Hero, Treasure, Pit, and Monster cannot be placed within a Wall
 
 # Spawn a wall
-def spawn_wall(object) :
+def spawn_wall(object, num_walls) :
     spawn_locations()
 
-    ran_col = random.choice(SPAWN_LOCATIONS)
-    # place W on the board
-    MASTER_BOARD[ran_col] = object
-
+    wall_num = 0
+    while wall_num < num_walls:
+        ran_col = random.choice(SPAWN_LOCATIONS)
+        # place W on the board
+        MASTER_BOARD[ran_col] = object
+        MASTER_BOARD[ran_col] = object
+        wall_num += 1
     # Update tables
     obstacle_locations()
     debug_spawn_locations()
