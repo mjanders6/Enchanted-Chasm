@@ -142,9 +142,9 @@ def obstacle_check(object):
     c_upper_bound = MASTER_OBSTACLES[object] + k_obs
 
     while c_l <= c_upper_bound:
-        if c_l >= 0 and c_l < 20 and DEBUG_SPAWN_LOCATIONS[c_l] != object and DEBUG_SPAWN_LOCATIONS[c_l] != '' and DEBUG_SPAWN_LOCATIONS[c_l] != 'W':
+        if c_l >= 0 and c_l <= 20 and MASTER_BOARD[c_l] != object and MASTER_BOARD[c_l] != '' and MASTER_BOARD[c_l] != 'W':
             #print(DEBUG_SPAWN_LOCATIONS[r][c_l])
-            OBSTACLE_CHECK_LIST.update({DEBUG_SPAWN_LOCATIONS[c_l]: c_l})
+            OBSTACLE_CHECK_LIST.update({MASTER_BOARD[c_l]: c_l})
         c_l += 1
 
 
@@ -171,13 +171,18 @@ def obstacle_check(object):
 
 # Initialize the board with obstacles
 def initialize_obstacle_location () :
-    global DEBUG_SPAWN_LOCATIONS
+    #global DEBUG_SPAWN_LOCATIONS
     # Initialize variables
     obj_list = ['P', 'M', 'H']
     spaces = 2
     # The number of walls must be obtained by the user (at least three(3)… the ends and at least one interior)
     user_input = 1  # input(f'Are you ready to exploire?\nResponse:\n1. Y\n2. N')
-    spawn_wall('W')
+
+    wall_num = 0
+    while wall_num < NUM_WALLS:
+        spawn_wall('W')
+        wall_num += 1
+
     # The Monster must not be placed within three(3) squares of the Treasure and Pit
     spawn_object('T')
 
@@ -185,8 +190,11 @@ def initialize_obstacle_location () :
         spawn_object(i)
         while obstacle_check(i) == 1:
             print(i , OBSTACLE_CHECK_LIST)
-            #DEBUG_SPAWN_LOCATIONS[:] = [value for value in DEBUG_SPAWN_LOCATIONS if value not in i]
-            DEBUG_SPAWN_LOCATIONS.remove(i)
+            #MASTER_BOARD.remove[:] = [value for value in MASTER_BOARD.remove if value != i]
+            for index, value in enumerate(MASTER_BOARD):
+                if i == value:
+                    MASTER_BOARD[index] = 'E'
+
 
             spawn_object(i)
             print('spawn again')
