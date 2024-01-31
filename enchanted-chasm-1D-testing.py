@@ -144,7 +144,7 @@ def obstacle_check(object):
     c_upper_bound = MASTER_OBSTACLES[object] + k_obs
 
     while c_l <= c_upper_bound:
-        if c_l >= 0 and c_l <= 20 and MASTER_BOARD[c_l] != object and MASTER_BOARD[c_l] != '' and MASTER_BOARD[c_l] != 'W':
+        if c_l > 0 and c_l < 20 and MASTER_BOARD[c_l] != object and MASTER_BOARD[c_l] != '' and MASTER_BOARD[c_l] != 'W':
             #print(DEBUG_SPAWN_LOCATIONS[r][c_l])
             OBSTACLE_CHECK_LIST.update({MASTER_BOARD[c_l]: c_l})
         c_l += 1
@@ -245,7 +245,7 @@ def initialze_board () :
     spawn_locations()
     debug_spawn_locations()
 
-initialze_board()
+#initialze_board()
 
 '''
 # Explore the Chasm
@@ -263,6 +263,12 @@ while USER_INPUT != 'N' or USER_INPUT != 'n':
 '''
 
 
+def main():
+    game_board(20)
+    initialize_obstacle_location()
+    obstacle_locations()
+    spawn_locations()
+    debug_spawn_locations()
 
-
-
+if __name__ == "__main__":
+    main()
