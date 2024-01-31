@@ -1,5 +1,6 @@
 '''
 Program Name: enchanted-chasm.py
+Github Repository: https://github.com/mjanders6/Enchanted-Chasm
 Author: Michael J. Anderson
 Date: 24JanFeb2024
 
@@ -42,6 +43,7 @@ List of Functions:
 
 '''
 import random
+
 NUM_WALLS = 1 # for debugging
 MASTER_OBSTACLES = {'T':0, 'M':0, 'H':0, 'P':0}
 MASTER_BOARD = []
@@ -174,14 +176,10 @@ def initialize_obstacle_location () :
     #global DEBUG_SPAWN_LOCATIONS
     # Initialize variables
     obj_list = ['P', 'M', 'H']
-    spaces = 2
+
     # The number of walls must be obtained by the user (at least three(3)… the ends and at least one interior)
     user_input = 1  # input(f'Are you ready to exploire?\nResponse:\n1. Y\n2. N')
 
-    '''wall_num = 0
-    while wall_num < NUM_WALLS:
-        spawn_wall('W')
-        wall_num += 1'''
     spawn_wall('W', 1)
     # The Monster must not be placed within three(3) squares of the Treasure and Pit
     spawn_object('T')
