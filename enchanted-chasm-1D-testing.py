@@ -44,19 +44,6 @@ List of Functions:
 '''
 import random
 
-NUM_WALLS = 1 # for debugging
-MASTER_OBSTACLES = {'T':0, 'M':0, 'H':0, 'P':0}
-MASTER_BOARD = []
-OBSTACLE_LOCATIONS = []
-SPAWN_LOCATIONS = []
-DEBUG_SPAWN_LOCATIONS = []
-HISTORICAL_MOVEMENTS = []
-OBSTACLE_CHECK_LIST = {'T':0, 'M':0, 'H':0, 'P':0}
-
-# Used to compare a list of tuples
-MASTER_OBSTACLE_LOCATIONS = []
-MASTER_SPAWN_LOCATIONS = []
-
 # Build NxN Wall
 def game_board (col) :
     j = 0
@@ -247,22 +234,6 @@ def initialze_board () :
 
 #initialze_board()
 
-'''
-# Explore the Chasm
-USER_INPUT = input(f'Are you ready to exploire?\nResponse:\n1. Y\n2. N')
-
-
-while USER_INPUT != 'N' or USER_INPUT != 'n':
-    if (USER_INPUT == 'Y' or USER_INPUT == 'y') :
-        NUM_WALLS = int(input(f'How many walls do you want to add?\nResponse:  '))
-        while NUM_WALLS >= 14:
-            NUM_WALLS = int(input(f'You entered {NUM_WALLS}. Number must be less than 14. \nResponse:  '))
-        else :
-            initialze_board()
-    break
-'''
-
-
 def main():
     game_board(20)
     initialize_obstacle_location()
@@ -270,5 +241,18 @@ def main():
     spawn_locations()
     debug_spawn_locations()
 
+
 if __name__ == "__main__":
+    NUM_WALLS = 1  # for debugging
+    MASTER_OBSTACLES = {'T': 0, 'M': 0, 'H': 0, 'P': 0}
+    MASTER_BOARD = []
+    OBSTACLE_LOCATIONS = []
+    SPAWN_LOCATIONS = []
+    DEBUG_SPAWN_LOCATIONS = []
+    HISTORICAL_MOVEMENTS = []
+    OBSTACLE_CHECK_LIST = {'T': 0, 'M': 0, 'H': 0, 'P': 0}
+
+    # Used to compare a list of tuples
+    MASTER_OBSTACLE_LOCATIONS = []
+    MASTER_SPAWN_LOCATIONS = []
     main()

@@ -44,18 +44,18 @@ List of Functions:
 '''
 import random
 
-MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[]}
-MASTER_BOARD = []
-MASTER_BOARD_LIST = []
-OBSTACLE_LOCATIONS = []
-SPAWN_LOCATIONS = []
-DEBUG_SPAWN_LOCATIONS = []
-HISTORICAL_MOVEMENTS = []
-OBSTACLE_CHECK_LIST = []
-
-# Used to compare a list of tuples
-MASTER_OBSTACLE_LOCATIONS = []
-MASTER_SPAWN_LOCATIONS = []
+# MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[]}
+# MASTER_BOARD = []
+# MASTER_BOARD_LIST = []
+# OBSTACLE_LOCATIONS = []
+# SPAWN_LOCATIONS = []
+# DEBUG_SPAWN_LOCATIONS = []
+# HISTORICAL_MOVEMENTS = []
+# OBSTACLE_CHECK_LIST = []
+#
+# # Used to compare a list of tuples
+# MASTER_OBSTACLE_LOCATIONS = []
+# MASTER_SPAWN_LOCATIONS = []
 
 # Build NxN Wall 
 def game_board (row, col) :
@@ -286,9 +286,6 @@ def initialze_board () :
     #obstacle_check('M')  # just debugging
 
 
-initialze_board()
-
-
 #where list1 = [[x, y]]
 '''def colission(list1, list2):
     for x,y in enumerate(list1):
@@ -329,3 +326,29 @@ while USER_INPUT != 'N':
 
 
 
+def main():
+    game_board(20, 20)
+    initialize_obstacle_location()
+    obstacle_locations()
+    spawn_locations()
+    debug_spawn_locations()
+
+
+if __name__ == "__main__":
+    MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[]}
+    MASTER_BOARD = []
+    MASTER_BOARD_LIST = []
+    OBSTACLE_LOCATIONS = []
+    SPAWN_LOCATIONS = []
+    DEBUG_SPAWN_LOCATIONS = []
+    HISTORICAL_MOVEMENTS = []
+    OBSTACLE_CHECK_LIST = []
+
+    # Used to compare a list of tuples
+    MASTER_OBSTACLE_LOCATIONS = []
+    MASTER_SPAWN_LOCATIONS = []
+
+    # Used to compare a list of tuples
+    MASTER_OBSTACLE_LOCATIONS = []
+    MASTER_SPAWN_LOCATIONS = []
+    main()
