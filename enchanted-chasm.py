@@ -1,5 +1,6 @@
 '''
 Program Name: enchanted-chasm.py
+Github Repository: https://github.com/mjanders6/Enchanted-Chasm
 Author: Michael J. Anderson
 Date: 24JanFeb2024
 
@@ -85,24 +86,24 @@ def obstacle_check(object, chk_obj):
     OBSTACLE_CHECK_LIST.clear()
     # Constant for N spaces from obstacle being compared
     k_obs = 2
-    check_value = 'T'
     # Calculate upper and lower bounds to check if an obstacle is N spaces close
-    l = []
     r = MASTER_OBSTACLES[object][0][0]
     c = MASTER_OBSTACLES[object][0][1]
-    r_l = MASTER_OBSTACLES[object][0][0] - 2
-    c_l = MASTER_OBSTACLES[object][0][1] - 2
-    r_upper_bound = 2 * k_obs + 1 + r_l
-    c_upper_bound = 2 * k_obs + 1 + c_l
+    r_l = MASTER_OBSTACLES[object][0][0] - k_obs
+    c_l = MASTER_OBSTACLES[object][0][1] - k_obs
+    r_upper_bound = MASTER_OBSTACLES[object][0][0] + k_obs
+    c_upper_bound = MASTER_OBSTACLES[object][0][1] + k_obs
 
-    while r_l < r_upper_bound:
-        if r_l >= 0 and DEBUG_SPAWN_LOCATIONS[r_l][c] != object:
-            #print(DEBUG_SPAWN_LOCATIONS[r_l][c])
-            OBSTACLE_CHECK_LIST.append(DEBUG_SPAWN_LOCATIONS[r_l][c])
-        while c_l < c_upper_bound:
-            if c_l >= 0 and DEBUG_SPAWN_LOCATIONS[r][c_l] != object:
-                #print(DEBUG_SPAWN_LOCATIONS[r][c_l])
-                OBSTACLE_CHECK_LIST.append(DEBUG_SPAWN_LOCATIONS[r][c_l])
+    while r_l <= r_upper_bound and r_l != object:
+        if r_l < 0 or r_l >= 20:
+            OBSTACLE_CHECK_LIST.update({'O':[r_l, c]})
+        else:
+            OBSTACLE_CHECK_LIST.update({MASTER_BOARD[r_l][c]:[r_l,c]})
+        while c_l <= c_upper_bound and c_l != object:
+            if c_l <  0 or c_l >= 20:
+                OBSTACLE_CHECK_LIST.update({'O': [r, c_l]})
+            else:
+                OBSTACLE_CHECK_LIST.update({MASTER_BOARD[r][c_l]:[r, c_l]})
             c_l += 1
         r_l += 1
 
@@ -342,7 +343,7 @@ if __name__ == "__main__":
     SPAWN_LOCATIONS = []
     DEBUG_SPAWN_LOCATIONS = []
     HISTORICAL_MOVEMENTS = []
-    OBSTACLE_CHECK_LIST = []
+    OBSTACLE_CHECK_LIST = {}
 
     # Used to compare a list of tuples
     MASTER_OBSTACLE_LOCATIONS = []
