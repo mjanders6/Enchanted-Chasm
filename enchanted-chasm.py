@@ -50,6 +50,7 @@ from pprint import pprint
 sys.path.append(os.path.realpath("."))
 import inquirer
 from inquirer.themes import GreenPassion
+import PySimpleGUI as sg
 
 # Build NxN Wall 
 def game_board () :
@@ -174,7 +175,6 @@ def debug_spawn_locations () :
                 DEBUG_SPAWN_LOCATIONS[i].append(MASTER_BOARD[i][j])
             j += 1
         i += 1
-
     return DEBUG_SPAWN_LOCATIONS
 
 # Initialize the board with obstacles
@@ -233,6 +233,7 @@ def initialize_hero_location () :
     #
     #         spawn_object(i)
     #         print('spawn again')
+
 def spawn_wall(object, num_walls) :
     spawn_locations()
     rows = len(SPAWN_LOCATIONS) - 1
@@ -264,6 +265,46 @@ def spawn_object (object) :
     debug_spawn_locations()
     spawn_locations()
 
+# def button1(text, key=None, disabled=False, button_color=('white', 'green')):
+#     return sg.Button(text, pad=(10, 10), font=font, focus=False, key=key,
+#             disabled=disabled, button_color=button_color)
+
+def game_gui():
+    rows = len(MASTER_BOARD)
+    board = []
+    i = 0
+    while i < rows:
+        #
+        board.append([])
+        cols = len(MASTER_BOARD[i])
+        j = 0
+        while j < cols:
+            if (MASTER_BOARD[i][j] != 'H' and MASTER_BOARD[i][j] != 'M' and MASTER_BOARD[i][j] != 'T' and MASTER_BOARD[i][j] != 'P' and MASTER_BOARD[i][j] != 'W'):
+                # board[i].append(ReadFormButton(''))
+                board[i].append(sg.Button('', key=(i, j), size=(3, 1), visible = True, disabled = True))
+            else:
+                # board[i].append(ReadFormButton(MASTER_BOARD[i][j]))
+                board[i].append(sg.Button(MASTER_BOARD[i][j], key=(i,j), button_color=("white", "blue"), size=(3, 1), visible = True, disabled = False))
+            j += 1
+        i += 1
+    col1 = sg.Column([[sg.Frame('Interaction:', [[sg.Column([[]], size=(450, 225), pad=(15, 0))]])]], pad=(0, 0))
+
+    col2 = sg.Column([[sg.Frame('Chasm:', board, expand_x=True, expand_y=True)]], element_justification='c',size=(450, 450), expand_x=True, expand_y=True, pad=(0, 0))
+
+    # window = sg.Window("Mass File Transfer").Layout(board)
+
+    layout = [[sg.vtop(col1), sg.VSeperator(), col2]]
+    window = sg.Window('Columns and Frames', layout, size=(1500, 950), grab_anywhere=True, resizable=True,margins=(0, 0))
+
+    while True:
+        event, values = window.Read()
+        print(event, window[event].get_text())
+
+        if event in (None, 'Exit'):
+            break
+
+
+
 # Initialize the game
 def game_start():
     # q = [
@@ -281,32 +322,51 @@ def game_start():
         print(i)
 
 def show_board():
-    for i in DEBUG_SPAWN_LOCATIONS:
-        print(i)
+    # for i in MASTER_BOARD:
+    #     print(i)
+    rows = len(MASTER_BOARD)
+    board = []
+    i = 0
+    while i < rows:
+        #
+        board.append([])
+        cols = len(MASTER_BOARD[i])
+        j = 0
+        while j < cols:
+            if (MASTER_BOARD[i][j] != 'H') :
+                board[i].append(' ')
+            else :
+                board[i].append(MASTER_BOARD[i][j])
+            j += 1
+        i += 1
+    for i in board:
+        print(' '.join(i))
 
+def cheat_board():
+    for i in DEBUG_SPAWN_LOCATIONS:
+        print(' '.join(i))
 
 def game_mode():
     q_continue = [inquirer.List("continue", message="Are you ready for an adventure of a lifetime? Choose your next move",
                                 choices=['Start Game', 'Quit while your ahead'], default="Start Game")]
-
     q_next_move = [inquirer.List("next_move", message="Choose your next move",
-                      choices=['Move', 'Cheat', 'Quit'], default="Move")]
+                                 choices=['Move', 'Cheat', 'Quit'], default="Move")]
+
     while True:
         answers = inquirer.prompt(q_continue, theme=GreenPassion())
         if answers['continue'] == 'Start Game':
             game_start()
             next_move = inquirer.prompt(q_next_move, theme=GreenPassion())
-            if answers['next_move'] == 'Move':
+            if next_move['next_move'] == 'Move':
                 print('this is where you would move')
-            elif answers['next_move'] == 'Cheat':
+            elif next_move['next_move'] == 'Cheat':
                 show_board()
-            elif answers['next_move'] == 'Quit':
+            elif next_move['next_move'] == 'Quit':
+                print('Thank you for your bravery!')
                 break
 
         if answers['continue'] == 'Quit while your ahead':
             break
-
-
 
 
 
@@ -322,12 +382,12 @@ def game_mode():
 # Explore the Chasm
 
 def main():
-    game_mode()
-    # game_board()
-    # initialize_hero_location()
-    # obstacle_locations()
-    # spawn_locations()
-    # debug_spawn_locations()
+    # game_mode()
+    game_board()
+    initialize_hero_location()
+    obstacle_locations()
+    spawn_locations()
+    debug_spawn_locations()
 
 
 
