@@ -44,6 +44,12 @@ List of Functions:
 
 '''
 import random
+import os
+import sys
+from pprint import pprint
+sys.path.append(os.path.realpath("."))
+import inquirer
+from inquirer.themes import GreenPassion
 
 # Build NxN Wall 
 def game_board () :
@@ -259,13 +265,49 @@ def spawn_object (object) :
     spawn_locations()
 
 # Initialize the game
-def initialze_board () :
-    game_board(20, 20)
-    initialize_obstacle_location()
+def game_start():
+    # q = [
+    #     inquirer.List("start", message="Are you ready for an adventure of a lifetime?", choices=["Yes", "No"], default="Yes")
+    # ]
+    # answers = inquirer.prompt(q, theme=GreenPassion())
+    #
+    # if answers['start'] == 'Yes':
+    game_board()
+    initialize_hero_location()
     obstacle_locations()
     spawn_locations()
     debug_spawn_locations()
-    #obstacle_check('M')  # just debugging
+    for i in MASTER_BOARD:
+        print(i)
+
+def show_board():
+    for i in DEBUG_SPAWN_LOCATIONS:
+        print(i)
+
+
+def game_mode():
+    q_continue = [inquirer.List("continue", message="Are you ready for an adventure of a lifetime? Choose your next move",
+                                choices=['Start Game', 'Quit while your ahead'], default="Start Game")]
+
+    q_next_move = [inquirer.List("next_move", message="Choose your next move",
+                      choices=['Move', 'Cheat', 'Quit'], default="Move")]
+    while True:
+        answers = inquirer.prompt(q_continue, theme=GreenPassion())
+        if answers['continue'] == 'Start Game':
+            game_start()
+            next_move = inquirer.prompt(q_next_move, theme=GreenPassion())
+            if answers['next_move'] == 'Move':
+                print('this is where you would move')
+            elif answers['next_move'] == 'Cheat':
+                show_board()
+            elif answers['next_move'] == 'Quit':
+                break
+
+        if answers['continue'] == 'Quit while your ahead':
+            break
+
+
+
 
 
 #where list1 = [[x, y]]
@@ -277,43 +319,16 @@ def initialze_board () :
 '''
 
 
-
-# Creats a list of locations where there is a wall per row
-
-
-
-
-
-
-
-
-
 # Explore the Chasm
-'''
-USER_INPUT = input(f'Are you ready to exploire?\nResponse:\n1. Y\n2. N')
-
-
-while USER_INPUT != 'N':
-    if (USER_INPUT == 'Y') :
-        initialze_board()
-        USER_INPUT = input(f'Want to move or cheat?\nResponse:\n1. Cheat\n2. Move\n3. End')
-        if (USER_INPUT == 1):
-            cheat = debug_spawn_locations()
-            for i in cheat:
-                print(i)
-    break
-
-
-'''
-
-
 
 def main():
-    game_board()
-    initialize_hero_location()
-    obstacle_locations()
-    spawn_locations()
-    debug_spawn_locations()
+    game_mode()
+    # game_board()
+    # initialize_hero_location()
+    # obstacle_locations()
+    # spawn_locations()
+    # debug_spawn_locations()
+
 
 
 if __name__ == "__main__":
