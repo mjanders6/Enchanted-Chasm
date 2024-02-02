@@ -203,7 +203,6 @@ def spawn_wall(object, num_walls) :
         ran_col = random.choice(SPAWN_LOCATIONS)
         # place W on the board
         MASTER_BOARD[ran_col] = object
-        MASTER_BOARD[ran_col] = object
         wall_num += 1
     # Update tables
     obstacle_locations()

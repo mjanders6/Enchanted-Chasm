@@ -45,19 +45,6 @@ List of Functions:
 '''
 import random
 
-# MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[]}
-# MASTER_BOARD = []
-# MASTER_BOARD_LIST = []
-# OBSTACLE_LOCATIONS = []
-# SPAWN_LOCATIONS = []
-# DEBUG_SPAWN_LOCATIONS = []
-# HISTORICAL_MOVEMENTS = []
-# OBSTACLE_CHECK_LIST = []
-#
-# # Used to compare a list of tuples
-# MASTER_OBSTACLE_LOCATIONS = []
-# MASTER_SPAWN_LOCATIONS = []
-
 # Build NxN Wall 
 def game_board (row, col) :
     i = 0
@@ -87,12 +74,12 @@ def obstacle_check(object, chk_obj):
     # Constant for N spaces from obstacle being compared
     k_obs = 2
     # Calculate upper and lower bounds to check if an obstacle is N spaces close
-    r = MASTER_OBSTACLES[object][0][0]
-    c = MASTER_OBSTACLES[object][0][1]
-    r_l = MASTER_OBSTACLES[object][0][0] - k_obs
-    c_l = MASTER_OBSTACLES[object][0][1] - k_obs
-    r_upper_bound = MASTER_OBSTACLES[object][0][0] + k_obs
-    c_upper_bound = MASTER_OBSTACLES[object][0][1] + k_obs
+    r = MASTER_OBSTACLES[object][0]
+    c = MASTER_OBSTACLES[object][1]
+    r_l = MASTER_OBSTACLES[object][0] - k_obs
+    c_l = MASTER_OBSTACLES[object][1] - k_obs
+    r_upper_bound = MASTER_OBSTACLES[object][0] + k_obs
+    c_upper_bound = MASTER_OBSTACLES[object][1] + k_obs
 
     while r_l <= r_upper_bound and r_l != object:
         if r_l < 0 or r_l >= 20:
@@ -113,30 +100,6 @@ def obstacle_check(object, chk_obj):
     else:
         #print(f'No Collision Detected')
         return 0
-
-
-'''
-def obstacle_check(object1, object2, threshold):
-    list1 = MASTER_OBSTACLES[object1]
-    list2 = MASTER_OBSTACLES[object2]
-    #list2 = object2
-
-
-    if len(list1) != len(list2):
-        return 'Lists are not of the same length.'
-
-    for point1, point2 in zip(list1, list2):
-
-        x1, y1 = point1
-        x2, y2 = point2
-        check_response = int()
-        if abs(x1 - x2) <= threshold and abs(y1 - y2) <= threshold:
-            check_response = 1
-        else:
-            check_response = 0
-
-        return check_response
-'''
 
 # Store a list of locations where a location is not blank
 def obstacle_locations () :
@@ -223,54 +186,53 @@ def initialize_obstacle_location () :
     # create location for next object from list of spawnable locations
         # If M -> threshhold is 3
         # If not M -> threshhold is 2
-    #
-    #
-    # Initialize spawn locations
+
+    obj_list = ['P', 'M', 'H']
+
+    # The number of walls must be obtained by the user (at least three(3)… the ends and at least one interior)
+    user_input = 1  # input(f'Are you ready to exploire?\nResponse:\n1. Y\n2. N')
+
+    # The Monster must not be placed within three(3) squares of the Treasure and Pit
+    spawn_object('T')
+
+    for i in obj_list:
+        spawn_object(i)
+        while obstacle_check('T', i) == 1:
+            print(i , OBSTACLE_CHECK_LIST)
+            #MASTER_BOARD.remove[:] = [value for value in MASTER_BOARD.remove if value != i]
+            for index, value in enumerate(MASTER_BOARD):
+                if i == value:
+                    MASTER_BOARD[index] = 'E'
+
+
+            spawn_object(i)
+            print('spawn again')
+
+def spawn_wall(object, num_walls) :
     spawn_locations()
-    obstacles = list(MASTER_OBSTACLES)
-    obstacles.remove('T')
-
-    for key, value in MASTER_OBSTACLES.items():
-        spawn_object(key)
-
-    rows = len(MASTER_BOARD) - 1
-    cols = len(MASTER_BOARD[0]) - 1
-
-    # Iterate over the list to ensure each element is not less than 3 spaces from each other
-
-def spawn_hero () :
-    heros_list = ['H']
     rows = len(SPAWN_LOCATIONS) - 1
-    cols = len(SPAWN_LOCATIONS[0]) - 1
 
-    # MASTER_OBSTACLES.update({'H' : [ran_row, ran_col]})
-
-    i = 0
-    while i < len(heros_list):
+    wall_num = 0
+    while wall_num < num_walls:
         ran_row = random.sample(range(1, rows), 1)[0]
-
         ran_col = random.choice(SPAWN_LOCATIONS[ran_row])
-        MASTER_OBSTACLES.update({heros_list[i]: [(ran_row, ran_col)]})
-
-        MASTER_BOARD[ran_row][ran_col] = heros_list[i]
-
-        i += 1
-    return MASTER_OBSTACLES
+        # place W on the board
+        MASTER_BOARD[ran_row][ran_col] = object
+        wall_num += 1
+    # Update tables
+    obstacle_locations()
+    debug_spawn_locations()
+    spawn_locations()
 
 # Spawn an object H, M, W, T, P
 def spawn_object (object) :
     spawn_locations()
     rows = len(SPAWN_LOCATIONS) - 1
 
-    if MASTER_OBSTACLES[object] != []:
-        current_obj_row = MASTER_OBSTACLES[object][0][0]
-        current_obj_col = MASTER_OBSTACLES[object][0][1]
-        MASTER_BOARD[current_obj_row][current_obj_col] = 'E'
-
     ran_row = random.sample(range(1, rows), 1)[0]
     ran_col = random.choice(SPAWN_LOCATIONS[ran_row])
     # Check to see if location is not within a certain amount of spaces
-    MASTER_OBSTACLES.update({ object : [[ran_row, ran_col]]})
+    MASTER_OBSTACLES.update({ object : [ran_row, ran_col]})
     MASTER_BOARD[ran_row][ran_col] = object
 
     obstacle_locations()
