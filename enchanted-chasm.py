@@ -46,25 +46,32 @@ List of Functions:
 import random
 
 # Build NxN Wall 
-def game_board (row, col) :
-    i = 0
-    while i < row:
-        # Initialize the inner list for each row
-        MASTER_BOARD.append([])
-        MASTER_BOARD_LIST.append([])
-
-        j = 0
-        while j < col:
-
-            if (j == 0) or (j == col - 1) or (i == 0) or (i == row - 1):
-                MASTER_BOARD[i].append('W')
-                MASTER_BOARD_LIST[i].append([i, j])
-            else:
-                MASTER_BOARD[i].append('E')
-                MASTER_BOARD_LIST[i].append([i, j])
-            j += 1
-
-        i += 1
+def game_board () :
+    file_path = "TheCave.txt"
+    with open(file_path, 'r') as file:
+        # Iterate over each line in the file
+        for line in file:
+            # Split the line into fields based on whitespace
+            fields = line.strip().split()
+            MASTER_BOARD.append(fields)
+    # i = 0
+    # while i < row:
+    #     # Initialize the inner list for each row
+    #     MASTER_BOARD.append([])
+    #     #MASTER_BOARD_LIST.append([])
+    #
+    #     j = 0
+    #     while j < col:
+    #
+    #         if (j == 0) or (j == col - 1) or (i == 0) or (i == row - 1):
+    #             MASTER_BOARD[i].append('W')
+    #             #MASTER_BOARD_LIST[i].append([i, j])
+    #         else:
+    #             MASTER_BOARD[i].append('E')
+    #             #MASTER_BOARD_LIST[i].append([i, j])
+    #         j += 1
+    #
+    #     i += 1
     return MASTER_BOARD
 
 def obstacle_check(object, chk_obj):
@@ -117,6 +124,8 @@ def obstacle_locations () :
             if (MASTER_BOARD[i][j] == 'W') or (MASTER_BOARD[i][j] == 'P') or (MASTER_BOARD[i][j] == 'H') or (MASTER_BOARD[i][j] == 'T') or (MASTER_BOARD[i][j] == 'M') or (MASTER_BOARD[i][j] == ' '):
                 OBSTACLE_LOCATIONS[i].append(j)
                 MASTER_OBSTACLE_LOCATIONS.append([i, j])
+                if MASTER_BOARD[i][j] != 'W':
+                    MASTER_OBSTACLES.update({ MASTER_BOARD[i][j] : [i, j]})
             j += 1
         i += 1
     return OBSTACLE_LOCATIONS
@@ -146,35 +155,19 @@ def debug_spawn_locations () :
     DEBUG_SPAWN_LOCATIONS.clear()
     rows = len(MASTER_BOARD)
 
-    if len(DEBUG_SPAWN_LOCATIONS) > 0:
-
-        i = 0
-        while i < rows:
-            #
-            DEBUG_SPAWN_LOCATIONS.append([])
-            cols = len(MASTER_BOARD[i])
-            j = 0
-            while j < cols:
-                if (MASTER_BOARD[i][j] == 'E') :
-                    DEBUG_SPAWN_LOCATIONS[i].append('')
-                else :
-                    DEBUG_SPAWN_LOCATIONS[i].append(MASTER_BOARD[i][j])
-                j += 1
-            i += 1
-    else:
-        i = 0
-        while i < rows:
-            #
-            DEBUG_SPAWN_LOCATIONS.append([])
-            cols = len(MASTER_BOARD[i])
-            j = 0
-            while j < cols:
-                if (MASTER_BOARD[i][j] == 'E') :
-                    DEBUG_SPAWN_LOCATIONS[i].append('')
-                else :
-                    DEBUG_SPAWN_LOCATIONS[i].append(MASTER_BOARD[i][j])
-                j += 1
-            i += 1
+    i = 0
+    while i < rows:
+        #
+        DEBUG_SPAWN_LOCATIONS.append([])
+        cols = len(MASTER_BOARD[i])
+        j = 0
+        while j < cols:
+            if (MASTER_BOARD[i][j] == 'E') :
+                DEBUG_SPAWN_LOCATIONS[i].append(' ')
+            else :
+                DEBUG_SPAWN_LOCATIONS[i].append(MASTER_BOARD[i][j])
+            j += 1
+        i += 1
 
     return DEBUG_SPAWN_LOCATIONS
 
@@ -204,10 +197,36 @@ def initialize_obstacle_location () :
                 if i == value:
                     MASTER_BOARD[index] = 'E'
 
-
             spawn_object(i)
             print('spawn again')
 
+# Initialize the hero on the board
+def initialize_hero_location () :
+    # initialize obstacles list
+    # initialize # of row/# of column
+    # initiate first obstacle
+    # create location for next object from list of spawnable locations
+        # If M -> threshhold is 3
+        # If not M -> threshhold is 2
+
+    obj_list = ['P', 'M', 'T']
+
+    # The number of walls must be obtained by the user (at least three(3)… the ends and at least one interior)
+    user_input = 1  # input(f'Are you ready to exploire?\nResponse:\n1. Y\n2. N')
+
+    # The Monster must not be placed within three(3) squares of the Treasure and Pit
+    spawn_object('H')
+
+    # for i in obj_list:
+    #     while obstacle_check('H', i) == 1:
+    #         print(i , OBSTACLE_CHECK_LIST)
+    #         #MASTER_BOARD.remove[:] = [value for value in MASTER_BOARD.remove if value != i]
+    #         for index, value in enumerate(MASTER_BOARD):
+    #             if i == value:
+    #                 MASTER_BOARD[index] = 'E'
+    #
+    #         spawn_object(i)
+    #         print('spawn again')
 def spawn_wall(object, num_walls) :
     spawn_locations()
     rows = len(SPAWN_LOCATIONS) - 1
@@ -290,8 +309,8 @@ while USER_INPUT != 'N':
 
 
 def main():
-    game_board(20, 20)
-    initialize_obstacle_location()
+    game_board()
+    initialize_hero_location()
     obstacle_locations()
     spawn_locations()
     debug_spawn_locations()
