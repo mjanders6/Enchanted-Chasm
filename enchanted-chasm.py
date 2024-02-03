@@ -281,17 +281,23 @@ def game_gui():
         while j < cols:
             if (MASTER_BOARD[i][j] != 'H' and MASTER_BOARD[i][j] != 'M' and MASTER_BOARD[i][j] != 'T' and MASTER_BOARD[i][j] != 'P' and MASTER_BOARD[i][j] != 'W'):
                 # board[i].append(ReadFormButton(''))
-                board[i].append(sg.Button('', key=(i, j), size=(3, 1), visible = True, disabled = True))
+                board[i].append(sg.Button('', key=(i,j), size=(3, 1), visible = True, disabled = True))
             else:
                 # board[i].append(ReadFormButton(MASTER_BOARD[i][j]))
                 board[i].append(sg.Button(MASTER_BOARD[i][j], key=(i,j), button_color=("white", "blue"), size=(3, 1), visible = True, disabled = False))
             j += 1
         i += 1
-    col1 = sg.Column([[sg.Frame('Interaction:', [[sg.Column([[]], size=(450, 225), pad=(15, 0))]])]], pad=(0, 0))
+
+    logging_layout = [[sg.Text("Anything printed will display here!")],
+                      [sg.Multiline(size=(60, 15), font='Courier 8', expand_x=True, expand_y=True, write_only=True,
+                                    reroute_stdout=True, reroute_stderr=True, echo_stdout_stderr=True, autoscroll=True,
+                                    auto_refresh=True)]]
+
+    col1 = sg.Column([[sg.Frame('Interaction:', [[sg.Column(logging_layout, size=(450, 225), pad=(15, 0))]])]], pad=(0, 0))
 
     col2 = sg.Column([[sg.Frame('Chasm:', board, expand_x=True, expand_y=True)]], element_justification='c',size=(450, 450), expand_x=True, expand_y=True, pad=(0, 0))
 
-    # window = sg.Window("Mass File Transfer").Layout(board)
+
 
     layout = [[sg.vtop(col1), sg.VSeperator(), col2]]
     window = sg.Window('Columns and Frames', layout, size=(1500, 950), grab_anywhere=True, resizable=True,margins=(0, 0), keep_on_top=True)
