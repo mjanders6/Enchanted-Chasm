@@ -31,8 +31,8 @@ Pseudo Code
             The Monster must not be placed within three(3) squares of the Treasure and Pit
             The Pit must not be placed within two(2) squares from the Treasure
             The Hero must not be placed a.) within three(3) squares from the Monster and b.) within two(2) squares from the Pit and Treasure
-    
-    
+
+
 List of Functions:
 - Generate board
 * Generate interior walls
@@ -52,7 +52,7 @@ import inquirer
 from inquirer.themes import GreenPassion
 import PySimpleGUI as sg
 
-# Build NxN Wall 
+# Build NxN Wall
 def game_board () :
     file_path = "TheCave.txt"
     with open(file_path, 'r') as file:
@@ -122,7 +122,7 @@ def obstacle_locations () :
     rows = len(MASTER_BOARD)
     i = 0
     while i < rows:
-        # 
+        #
         OBSTACLE_LOCATIONS.append([])
         MASTER_OBSTACLE_LOCATIONS.append([])
         cols = len(MASTER_BOARD[i])
@@ -294,15 +294,19 @@ def game_gui():
     # window = sg.Window("Mass File Transfer").Layout(board)
 
     layout = [[sg.vtop(col1), sg.VSeperator(), col2]]
-    window = sg.Window('Columns and Frames', layout, size=(1500, 950), grab_anywhere=True, resizable=True,margins=(0, 0))
+    window = sg.Window('Columns and Frames', layout, size=(1500, 950), grab_anywhere=True, resizable=True,margins=(0, 0), keep_on_top=True)
 
     while True:
         event, values = window.Read()
-        print(event, window[event].get_text())
+        loc = list(event)
+        if type(loc) != 'NoneType':
+            print(loc, values) # window[event].get_text()
 
         if event in (None, 'Exit'):
+            print("[LOG] Clicked Exit!")
             break
-
+    window.close()
+    exit(0)
 
 
 # Initialize the game
