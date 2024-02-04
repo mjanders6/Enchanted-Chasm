@@ -1,5 +1,5 @@
 '''
-Program Name: enchanted-chasm.py
+Program Name: enchanted-chasm-1D.py
 GitHub Repository: https://github.com/mjanders6/Enchanted-Chasm
 Author: Michael J. Anderson
 Date: 03Feb2024
