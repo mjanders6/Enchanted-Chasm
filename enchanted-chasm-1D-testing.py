@@ -1,45 +1,53 @@
 '''
 Program Name: enchanted-chasm.py
-Github Repository: https://github.com/mjanders6/Enchanted-Chasm
+GitHub Repository: https://github.com/mjanders6/Enchanted-Chasm
 Author: Michael J. Anderson
-Date: 24JanFeb2024
+Date: 03Feb2024
 
 
 Purpose:
 Build a one-row Cave complete with one Pit, Monster, and Treasure. Include the placement of the Hero and Walls.
 
-
 Customer Requirements:
-
 The Cave (20x1 squares) must contain the following: Hero, Walls, Pit, Monster, and Treasure
 - At a minimum, Walls must be located at the ends (0,0) and (20,0)
 - The number of walls must be obtained by the user (at least three(3)… the ends and at least one interior)
 - The Monster must not be placed within three(3) squares of the Treasure and Pit
 - The Pit must not be placed within two(2) squares from the Treasure
 - The Hero must not be placed a.) within three(3) squares from the Monster and b.) within two(2) squares from the Pit and Treasure
-
 - Hero, Treasure, Pit, and Monster cannot be placed within a Wall
 
 Pseudo Code
-    Build the board
-    Build the interior wall
-    Create a list of locations on where the walls are
-    Define obstacle locations within a dictionary
-        compare dictioary values to ensure
-            Nothing is within a wall
-            The Monster must not be placed within three(3) squares of the Treasure and Pit
-            The Pit must not be placed within two(2) squares from the Treasure
-            The Hero must not be placed a.) within three(3) squares from the Monster and b.) within two(2) squares from the Pit and Treasure
+    Build the game board 1x20
+        Create a range from 0 to less than 20
+        Loop through each element
+            If the element is at 0 or 19 set it to W
+            Else set it to E
+        Return the board
 
+    Define spawn able locations to be used when placing the hero and obstacles on the board
+        Loop through the board
+            if an element is E
+                store it in a separate list with the same location
 
-List of Functions:
-- Generate board
-* Generate interior walls
-- Build a list where there is an obstacles and walls
-* Place monster, pit, treasure on the board
-* Generate random spawn locations
-* Move the hero
-
+    Initialize the wall, hazards, and hero
+        Ask the user how many walls are going to be placed
+            If number is <= 0 or > 13
+                Ask the user to renter a number between 1 and 13
+        Place elements on the board
+            Get the list of spawnable locations
+                Randomly place the elements on the board
+                    Monster must not be placed within three squares of the Treasure and Pit
+                    Pit must not be placed within two squares from the Treasure
+                    Hero must not be placed
+                        within three(3) squares from the Monster
+                        within two(2) squares from the Pit and Treasure
+                    Hero, Treasure, Pit, and Monster cannot be placed within a Wall
+                Get the list of spawnable locations
+                Loop until all elements are placed on the board
+            Get the list of spawnable locations
+                Randomly place the number of walls on the board
+    Display the board on the screen
 
 '''
 import random
@@ -60,14 +68,12 @@ def game_board (col) :
 # Store a list of locations where a location is not blank
 def obstacle_locations () :
     OBSTACLE_LOCATIONS.clear()
-    MASTER_OBSTACLE_LOCATIONS.clear()
     #
     cols = len(MASTER_BOARD)
     j = 0
     while j < cols:
         if (MASTER_BOARD[j] == 'W') or (MASTER_BOARD[j] == 'P') or (MASTER_BOARD[j] == 'H') or (MASTER_BOARD[j] == 'T') or (MASTER_BOARD[j] == 'M') or (MASTER_BOARD[j] == ' '):
             OBSTACLE_LOCATIONS.append(j)
-            MASTER_OBSTACLE_LOCATIONS.append([(j)])
         j += 1
 
     return OBSTACLE_LOCATIONS
@@ -75,13 +81,11 @@ def obstacle_locations () :
 # Catalog empty locations
 def spawn_locations () :
     SPAWN_LOCATIONS.clear()
-    MASTER_SPAWN_LOCATIONS.clear()
     cols = len(MASTER_BOARD)
     j = 0
     while j < cols:
         if (MASTER_BOARD[j] == 'E') :
             SPAWN_LOCATIONS.append(j)
-            MASTER_SPAWN_LOCATIONS.append([(j)])
         j += 1
 
     return SPAWN_LOCATIONS
@@ -132,7 +136,6 @@ def obstacle_check(object):
 
     while c_l <= c_upper_bound:
         if c_l > 0 and c_l < 20 and MASTER_BOARD[c_l] != object and MASTER_BOARD[c_l] != '' and MASTER_BOARD[c_l] != 'W':
-            #print(DEBUG_SPAWN_LOCATIONS[r][c_l])
             OBSTACLE_CHECK_LIST.update({MASTER_BOARD[c_l]: c_l})
         c_l += 1
 
@@ -157,33 +160,32 @@ def obstacle_check(object):
                         while abs(value - c) < k_obs:
                             return 1'''
 
-
 # Initialize the board with obstacles
 def initialize_obstacle_location () :
-    #global DEBUG_SPAWN_LOCATIONS
     # Initialize variables
-    obj_list = ['P', 'M', 'H']
+    obj_list = ['T', 'P', 'M', 'H']
 
+    user_input = int(input(f'Enter the number of walls?\nResponse: '))
     # The number of walls must be obtained by the user (at least three(3)… the ends and at least one interior)
-    user_input = 1  # input(f'Are you ready to exploire?\nResponse:\n1. Y\n2. N')
+    while user_input <= 0 or user_input > 13:
+        if user_input <= 0:
+            user_input = int(input(f'The number cant be 0 or less.\nPlease enter a number between 1 and 13?\nResponse: '))
+        elif (user_input > 13):
+            user_input = int(input(f'That number is greater than 13.\nPlease enter a number between 1 and 13?\nResponse: '))
 
-    spawn_wall('W', 1)
     # The Monster must not be placed within three(3) squares of the Treasure and Pit
-    spawn_object('T')
+    #spawn_object('T')
 
     for i in obj_list:
         spawn_object(i)
         while obstacle_check(i) == 1:
-            print(i , OBSTACLE_CHECK_LIST)
             #MASTER_BOARD.remove[:] = [value for value in MASTER_BOARD.remove if value != i]
             for index, value in enumerate(MASTER_BOARD):
                 if i == value:
                     MASTER_BOARD[index] = 'E'
-
-
             spawn_object(i)
-            print('spawn again')
 
+    spawn_wall('W', user_input)
 
 
 
@@ -223,35 +225,21 @@ def spawn_object (object) :
     debug_spawn_locations()
     spawn_locations()
 
-# Initialize the game
-def initialze_board () :
-    game_board(20)
-    initialize_obstacle_location()
-    obstacle_locations()
-    spawn_locations()
-    debug_spawn_locations()
-
-#initialze_board()
-
 def main():
     game_board(20)
     initialize_obstacle_location()
     obstacle_locations()
     spawn_locations()
     debug_spawn_locations()
+    print(MASTER_BOARD)
 
 
 if __name__ == "__main__":
-    NUM_WALLS = 1  # for debugging
     MASTER_OBSTACLES = {'T': 0, 'M': 0, 'H': 0, 'P': 0}
     MASTER_BOARD = []
     OBSTACLE_LOCATIONS = []
     SPAWN_LOCATIONS = []
     DEBUG_SPAWN_LOCATIONS = []
-    HISTORICAL_MOVEMENTS = []
     OBSTACLE_CHECK_LIST = {'T': 0, 'M': 0, 'H': 0, 'P': 0}
 
-    # Used to compare a list of tuples
-    MASTER_OBSTACLE_LOCATIONS = []
-    MASTER_SPAWN_LOCATIONS = []
     main()
