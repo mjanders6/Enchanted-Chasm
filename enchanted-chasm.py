@@ -233,10 +233,7 @@ def spawn_object (object) :
 #             disabled=disabled, button_color=button_color)
 
 def game_gui():
-    #
-    rows = len(MASTER_BOARD)
-    board = []
-    i = 0
+
     root = Tk()
     # override window settings
     root.configure(bg='gray')
