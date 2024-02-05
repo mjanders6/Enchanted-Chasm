@@ -38,6 +38,7 @@ center_frame.place(
     x=utils.width_prct(25),
     y=utils.height_prct(25))
 
+
 for x in range(settings.GRID_SIZE):
     for y in range(settings.GRID_SIZE):
         c1 = Cell(x, y)
@@ -45,6 +46,8 @@ for x in range(settings.GRID_SIZE):
         c1.cell_btn_object.grid(
             column=x, row=y
         )
+
+Cell.randomize_mines()
 
 # Notes from different buttons placements
 # c2 = Cell()

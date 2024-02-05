@@ -50,12 +50,8 @@ from pprint import pprint
 sys.path.append(os.path.realpath("."))
 import inquirer
 from inquirer.themes import GreenPassion
+import PySimpleGUI as sg
 from tkinter import *
-from cell import Cell
-import settings
-import utils
-
-MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[]}
 
 # Build NxN Wall
 def game_board () :
@@ -233,54 +229,49 @@ def spawn_object (object) :
 #             disabled=disabled, button_color=button_color)
 
 def game_gui():
-    #
     rows = len(MASTER_BOARD)
     board = []
     i = 0
-    root = Tk()
-    # override window settings
-    root.configure(bg='gray')
-    root.geometry(f'{settings.WIDTH}x{settings.HEIGHT}')
-    root.title('Enchanted Chasm')
-    root.resizable(False, False)
+    while i < rows:
+        #
+        board.append([])
+        cols = len(MASTER_BOARD[i])
+        j = 0
+        while j < cols:
+            if (MASTER_BOARD[i][j] != 'H' and MASTER_BOARD[i][j] != 'M' and MASTER_BOARD[i][j] != 'T' and MASTER_BOARD[i][j] != 'P' and MASTER_BOARD[i][j] != 'W'):
+                # board[i].append(ReadFormButton(''))
+                board[i].append(sg.Button('', key=(i,j), size=(3, 1), visible = True, disabled = True))
 
-    top_frame = Frame(
-        root,
-        bg='gray',
-        width=settings.WIDTH,
-        height=utils.height_prct(25)
-    )
-    top_frame.place(x=0, y=0)
+            else:
+                # board[i].append(ReadFormButton(MASTER_BOARD[i][j]))
+                board[i].append(sg.Button(MASTER_BOARD[i][j], key=(i,j), button_color=("white", "blue"), size=(3, 1), visible = True, disabled = False))
+            j += 1
+        i += 1
 
-    left_frame = Frame(
-        root,
-        bg='gray',
-        width=utils.width_prct(25),
-        height=utils.height_prct(75)
-    )
-    left_frame.place(x=0, y=utils.height_prct(25))
+    logging_layout = [[sg.Text("Anything printed will display here!")],
+                      [sg.Multiline(size=(60, 15), font='Courier 8', expand_x=True, expand_y=True, write_only=True,
+                                    reroute_stdout=True, reroute_stderr=True, echo_stdout_stderr=True, autoscroll=True,
+                                    auto_refresh=True)]]
 
-    center_frame = Frame(
-        root,
-        bg='white',
-        width=utils.width_prct(75),
-        height=utils.height_prct(75)
-    )
-    center_frame.place(
-        x=utils.width_prct(25),
-        y=utils.height_prct(25))
+    col1 = sg.Column([[sg.Frame('Interaction:', [[sg.Column(logging_layout, size=(450, 225), pad=(15, 0))]])]], pad=(0, 0))
 
-    for x in range(settings.GRID_SIZE):
-        for y in range(settings.GRID_SIZE):
-            c1 = Cell(x, y)
-            c1.create_btn_object(center_frame)
-            c1.cell_btn_object.grid(
-                column=x, row=y
-            )
+    col2 = sg.Column([[sg.Frame('Chasm:', board, expand_x=True, expand_y=True)]], element_justification='c',size=(450, 450), expand_x=True, expand_y=True, pad=(0, 0))
 
-    Cell.set_players(MASTER_OBSTACLES)
+    layout = [[sg.vtop(col1), sg.VSeperator(), col2]]
+    window = sg.Window('Columns and Frames', layout, size=(1500, 950), grab_anywhere=True, resizable=True,margins=(0, 0), keep_on_top=True, finalize=True)
 
-    root.mainloop()
+    while True:
+        event, values = window.Read()
+        loc = list(event)
+        if type(loc) != 'NoneType':
+            print(loc, values) # window[event].get_text()
+
+        if event in (None, 'Exit'):
+            print("[LOG] Clicked Exit!")
+            break
+    window.close()
+    exit(0)
+
 
 # Initialize the game
 def game_start():
@@ -353,7 +344,7 @@ def game_mode():
 # Explore the Chasm
 
 def main():
-    #game_mode()
+    game_mode()
     game_board()
     initialize_hero_location()
     obstacle_locations()
