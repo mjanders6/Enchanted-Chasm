@@ -4,6 +4,7 @@ import settings
 import utils
 
 
+
 class Cell:
     all = []
     master_obs = {}
@@ -30,17 +31,21 @@ class Cell:
         btn.bind('<Button-3>', self.right_click_actions) # right click
         self.cell_btn_object = btn
 
-
     def left_click_actions(self, event):
         if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status != 'H':
             self.show_mine()
-        else:
-            self.show_cell()
+
+        if self.cell_btn_object['state'] == 'normal' and self.status != 'H' and self.status == 'W':
+            self.show_wall()
 
     def show_mine(self):
         self.cell_btn_object.configure(bg='red')
         self.cell_btn_object.configure(text=self.status)
 
+    def show_wall(self):
+        self.cell_btn_object.configure(bg='green')
+        self.cell_btn_object.configure(state='disabled')
+        self.cell_btn_object.configure(text=self.status)
 
     def show_cell(self):
         if not self.is_opened:
@@ -51,7 +56,6 @@ class Cell:
             )
             # Mark the cell as opened (Use is as the last line of this method)
         self.is_opened = True
-
 
     def right_click_actions(self, event):
         print(self.__repr__())
@@ -66,17 +70,40 @@ class Cell:
             print(picked_cells)
 
     # Sets the status of the cell to the obstacle value
-    def set_players(MASTER_OBSTACLES):
-        Cell.master_obs = {key: tuple(value) for key, value in MASTER_OBSTACLES.items()}
+    # def set_players(MASTER_OBSTACLES):
+    #     Cell.master_obs = {key: tuple(value) for key, value in MASTER_OBSTACLES.items()}
+    #     for cells in Cell.all:
+    #         for key, value in Cell.master_obs.items():
+    #             if value == (cells.x, cells.y):
+    #                 print(cells)
+    #                 cells.is_mine = True
+    #                 cells.status = key
+    #                 if key == 'H':
+    #                     cells.cell_btn_object.configure(text=key)
+    #                     for i in cells.surrounded_cells:
+    #                         i.cell_btn_object.configure(state='normal')
+
+
+    def set_players(MASTER_BOARD):
         for cells in Cell.all:
-            for key, value in Cell.master_obs.items():
-                if value == (cells.x, cells.y):
-                    cells.is_mine = True
-                    cells.status = key
-                    if key == 'H':
-                        cells.cell_btn_object.configure(text=key)
-                        for i in cells.surrounded_cells:
-                            i.cell_btn_object.configure(state='normal')
+            row = len(MASTER_BOARD)
+            i = 0
+            while i < row:
+                j = 0
+                col = len(MASTER_BOARD[i])
+                while j < col:
+                    if (cells.x, cells.y) == (i, j):
+                        cells.status = MASTER_BOARD[i][j]
+                        if MASTER_BOARD[i][j] == 'T' or MASTER_BOARD[i][j] == 'M' or MASTER_BOARD[i][j] == 'P':
+                            cells.is_mine = True
+                        if MASTER_BOARD[i][j] == 'H':
+                            cells.is_mine = True
+                            cells.cell_btn_object.configure(text=MASTER_BOARD[i][j])
+                            for k in cells.surrounded_cells:
+                                k.cell_btn_object.configure(state='normal')
+                    j += 1
+                i += 1
+
 
 
     def get_cell_by_axis(self, x,y):

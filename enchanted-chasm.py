@@ -52,10 +52,9 @@ import inquirer
 from inquirer.themes import GreenPassion
 from tkinter import *
 from cell import Cell
+from player import Player
 import settings
 import utils
-
-MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[]}
 
 # Build NxN Wall
 def game_board () :
@@ -66,6 +65,7 @@ def game_board () :
             # Split the line into fields based on whitespace
             fields = line.strip().split()
             MASTER_BOARD.append(fields)
+        file.close()
     return MASTER_BOARD
 
 def obstacle_check(object, chk_obj):
@@ -164,54 +164,9 @@ def debug_spawn_locations () :
         i += 1
     return DEBUG_SPAWN_LOCATIONS
 
-# Initialize the board with obstacles
-def initialize_obstacle_location () :
-    # initialize obstacles list
-    # initialize # of row/# of column
-    # initiate first obstacle
-    # create location for next object from list of spawnable locations
-        # If M -> threshhold is 3
-        # If not M -> threshhold is 2
-
-    obj_list = ['P', 'M', 'H']
-
-    # The number of walls must be obtained by the user (at least three(3)… the ends and at least one interior)
-    user_input = 1  # input(f'Are you ready to exploire?\nResponse:\n1. Y\n2. N')
-
-    # The Monster must not be placed within three(3) squares of the Treasure and Pit
-    spawn_object('T')
-
-    for i in obj_list:
-        spawn_object(i)
-        while obstacle_check('T', i) == 1:
-            print(i , OBSTACLE_CHECK_LIST)
-            #MASTER_BOARD.remove[:] = [value for value in MASTER_BOARD.remove if value != i]
-            for index, value in enumerate(MASTER_BOARD):
-                if i == value:
-                    MASTER_BOARD[index] = 'E'
-
-            spawn_object(i)
-            print('spawn again')
-
 # Initialize the hero on the board
 def initialize_hero_location () :
     spawn_object('H')
-
-def spawn_wall(object, num_walls) :
-    spawn_locations()
-    rows = len(SPAWN_LOCATIONS) - 1
-
-    wall_num = 0
-    while wall_num < num_walls:
-        ran_row = random.sample(range(1, rows), 1)[0]
-        ran_col = random.choice(SPAWN_LOCATIONS[ran_row])
-        # place W on the board
-        MASTER_BOARD[ran_row][ran_col] = object
-        wall_num += 1
-    # Update tables
-    obstacle_locations()
-    debug_spawn_locations()
-    spawn_locations()
 
 # Spawn an object H, M, W, T, P
 def spawn_object (object) :
@@ -221,16 +176,12 @@ def spawn_object (object) :
     ran_row = random.sample(range(1, rows), 1)[0]
     ran_col = random.choice(SPAWN_LOCATIONS[ran_row])
     # Check to see if location is not within a certain amount of spaces
-    MASTER_OBSTACLES.update({ object : [ran_row, ran_col]})
+    MASTER_OBSTACLES.update({ object : (ran_row, ran_col)})
     MASTER_BOARD[ran_row][ran_col] = object
 
     obstacle_locations()
     debug_spawn_locations()
     spawn_locations()
-
-# def button1(text, key=None, disabled=False, button_color=('white', 'green')):
-#     return sg.Button(text, pad=(10, 10), font=font, focus=False, key=key,
-#             disabled=disabled, button_color=button_color)
 
 def game_gui():
 
@@ -272,10 +223,10 @@ def game_gui():
             c1 = Cell(x, y)
             c1.create_btn_object(center_frame)
             c1.cell_btn_object.grid(
-                column=x, row=y
+                column=y, row=x
             )
 
-    Cell.set_players(MASTER_OBSTACLES)
+    Cell.set_players(MASTER_BOARD)
 
     root.mainloop()
 
@@ -337,16 +288,6 @@ def game_mode():
             break
 
 
-
-#where list1 = [[x, y]]
-'''def colission(list1, list2):
-    for x,y in enumerate(list1):
-        for a,b in enumerate(list2):
-            if x == a and y == b:
-                print('found wall')
-'''
-
-
 # Explore the Chasm
 
 def main():
@@ -356,8 +297,7 @@ def main():
     obstacle_locations()
     spawn_locations()
     debug_spawn_locations()
-
-
+    cheat_board()
 
 if __name__ == "__main__":
     MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[]}
