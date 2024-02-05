@@ -51,6 +51,7 @@ sys.path.append(os.path.realpath("."))
 import inquirer
 from inquirer.themes import GreenPassion
 import PySimpleGUI as sg
+from tkinter import *
 
 # Build NxN Wall
 def game_board () :
@@ -282,6 +283,7 @@ def game_gui():
             if (MASTER_BOARD[i][j] != 'H' and MASTER_BOARD[i][j] != 'M' and MASTER_BOARD[i][j] != 'T' and MASTER_BOARD[i][j] != 'P' and MASTER_BOARD[i][j] != 'W'):
                 # board[i].append(ReadFormButton(''))
                 board[i].append(sg.Button('', key=(i,j), size=(3, 1), visible = True, disabled = True))
+
             else:
                 # board[i].append(ReadFormButton(MASTER_BOARD[i][j]))
                 board[i].append(sg.Button(MASTER_BOARD[i][j], key=(i,j), button_color=("white", "blue"), size=(3, 1), visible = True, disabled = False))
@@ -297,10 +299,8 @@ def game_gui():
 
     col2 = sg.Column([[sg.Frame('Chasm:', board, expand_x=True, expand_y=True)]], element_justification='c',size=(450, 450), expand_x=True, expand_y=True, pad=(0, 0))
 
-
-
     layout = [[sg.vtop(col1), sg.VSeperator(), col2]]
-    window = sg.Window('Columns and Frames', layout, size=(1500, 950), grab_anywhere=True, resizable=True,margins=(0, 0), keep_on_top=True)
+    window = sg.Window('Columns and Frames', layout, size=(1500, 950), grab_anywhere=True, resizable=True,margins=(0, 0), keep_on_top=True, finalize=True)
 
     while True:
         event, values = window.Read()

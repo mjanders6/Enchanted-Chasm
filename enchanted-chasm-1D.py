@@ -2,7 +2,7 @@
 Program Name: enchanted-chasm-1D.py
 GitHub Repository: https://github.com/mjanders6/Enchanted-Chasm
 Author: Michael J. Anderson
-Date: 03Feb2024
+Date: 04Feb2024
 
 
 Purpose:
@@ -25,24 +25,25 @@ Pseudo Code
             Else set it to E
         Return the board
 
-    Define spawn able locations to be used when placing the hero and obstacles on the board
+    Define spawnable locations to be used when placing the hero and obstacles on the board
         Loop through the board
             if an element is E
                 store it in a separate list with the same location
 
-    Initialize the wall, hazards, and hero
+    Initialize the pit, wall, hazards, and hero
         Ask the user how many walls are going to be placed
             If number is <= 0 or > 13
                 Ask the user to renter a number between 1 and 13
         Place elements on the board
             Get the list of spawnable locations
-                Randomly place the elements on the board
-                    Monster must not be placed within three squares of the Treasure and Pit
-                    Pit must not be placed within two squares from the Treasure
-                    Hero must not be placed
-                        within three(3) squares from the Monster
-                        within two(2) squares from the Pit and Treasure
-                    Hero, Treasure, Pit, and Monster cannot be placed within a Wall
+                Randomly place the elements on the board one at a time
+                    Check if 
+                        Monster must not be placed within three squares of the Treasure and Pit
+                        Pit must not be placed within two squares from the Treasure
+                        Hero must not be placed
+                            within three squares from the Monster
+                            within two squares from the Pit and Treasure
+                        Hero, Treasure, Pit, and Monster cannot be placed within a Wall
                 Get the list of spawnable locations
                 Loop until all elements are placed on the board
             Get the list of spawnable locations
@@ -52,7 +53,7 @@ Pseudo Code
 '''
 import random
 
-# Build NxN Wall
+# Function to build a Wall
 def game_board (col) :
     j = 0
     while j < col:
@@ -78,7 +79,7 @@ def obstacle_locations () :
 
     return OBSTACLE_LOCATIONS
 
-# Catalog empty locations
+# Store a list of locations where a location is blank
 def spawn_locations () :
     SPAWN_LOCATIONS.clear()
     cols = len(MASTER_BOARD)
@@ -90,7 +91,7 @@ def spawn_locations () :
 
     return SPAWN_LOCATIONS
 
-# Debug, clean view, to show where the obstacles are
+# Debug list, clean view, to show where the obstacles are for a larger board
 def debug_spawn_locations () :
     DEBUG_SPAWN_LOCATIONS.clear()
     rows = len(MASTER_BOARD)
@@ -119,7 +120,7 @@ def debug_spawn_locations () :
 
     return DEBUG_SPAWN_LOCATIONS
 
-# Check
+# Check if elements being placed are not within a cretain distance of other elements
 def obstacle_check(object):
     #  Update MASTER_OBSTACLES to reflect the different relationships
     lstKeys = list(MASTER_OBSTACLES.keys())
@@ -133,15 +134,15 @@ def obstacle_check(object):
     c = MASTER_OBSTACLES[object]
     c_l = MASTER_OBSTACLES[object] - k_obs
     c_upper_bound = MASTER_OBSTACLES[object] + k_obs
-
+    
+    # Create a dictionary that stores the locations of the elements that are not the current object 
     while c_l <= c_upper_bound:
         if c_l > 0 and c_l < 20 and MASTER_BOARD[c_l] != object and MASTER_BOARD[c_l] != '' and MASTER_BOARD[c_l] != 'W':
             OBSTACLE_CHECK_LIST.update({MASTER_BOARD[c_l]: c_l})
         c_l += 1
 
 
-    #print(f'{object} | {OBSTACLE_CHECK_LIST}')
-
+    # Check the differenace between elemetns to see if they are within tolerance of placement requirements
     for key, value in OBSTACLE_CHECK_LIST.items():
         while abs(value - c) < k_obs:
             return 1
@@ -173,13 +174,11 @@ def initialize_obstacle_location () :
         elif (user_input > 13):
             user_input = int(input(f'That number is greater than 13.\nPlease enter a number between 1 and 13?\nResponse: '))
 
-    # The Monster must not be placed within three(3) squares of the Treasure and Pit
-    #spawn_object('T')
-
+    # Check to see if the check function returns a 1. If it does respawn
     for i in obj_list:
         spawn_object(i)
         while obstacle_check(i) == 1:
-            #MASTER_BOARD.remove[:] = [value for value in MASTER_BOARD.remove if value != i]
+
             for index, value in enumerate(MASTER_BOARD):
                 if i == value:
                     MASTER_BOARD[index] = 'E'
@@ -187,14 +186,6 @@ def initialize_obstacle_location () :
 
     spawn_wall('W', user_input)
 
-
-
-
-    # The Pit must not be placed within two(2) squares from the Treasure
-
-    # The Hero must not be placed a.) within three(3) squares from the Monster and b.) within two(2) squares from the Pit and Treasure
-
-    # Hero, Treasure, Pit, and Monster cannot be placed within a Wall
 
 # Spawn a wall
 def spawn_wall(object, num_walls) :
@@ -213,7 +204,7 @@ def spawn_wall(object, num_walls) :
 
 # Spawn an object H, M, W, T, P
 def spawn_object (object) :
-    spawn_locations()
+    spawn_locations() # uses spawnable locations
     rows = len(SPAWN_LOCATIONS) - 1
 
     ran_col = random.choice(SPAWN_LOCATIONS)
