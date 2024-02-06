@@ -122,6 +122,7 @@ class Cell:
                             cells.is_mine = True
                         if Cell.MASTER_BOARD[i][j] == '*':
                             cells.is_last_move = True
+                            cells.is_mine = False
                             cells.cell_btn_object.configure(state='disabled')
                             cells.cell_btn_object.configure(text=Cell.MASTER_BOARD[i][j])
                         if Cell.MASTER_BOARD[i][j] == 'H':
