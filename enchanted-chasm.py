@@ -65,6 +65,7 @@ def game_board () :
             # Split the line into fields based on whitespace
             fields = line.strip().split()
             MASTER_BOARD.append(fields)
+            Cell.MASTER_BOARD.append(fields)
         file.close()
     return MASTER_BOARD
 
@@ -120,6 +121,7 @@ def obstacle_locations () :
                 MASTER_OBSTACLE_LOCATIONS.append([i, j])
                 if MASTER_BOARD[i][j] != 'W':
                     MASTER_OBSTACLES.update({ MASTER_BOARD[i][j] : [i, j]})
+                    Cell.master_obs.update({ MASTER_BOARD[i][j] : (i, j)})
             j += 1
         i += 1
     return OBSTACLE_LOCATIONS
@@ -226,7 +228,7 @@ def game_gui():
                 column=y, row=x
             )
 
-    Cell.set_players(MASTER_BOARD)
+    Cell.set_players()
 
     root.mainloop()
 
