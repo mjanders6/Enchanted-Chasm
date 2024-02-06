@@ -32,6 +32,14 @@ class Cell:
         self.cell_btn_object = btn
 
     def left_click_actions(self, event):
+
+        print((self.x, self.y))
+        # works, just need to be able to upate board and update previous H
+        if self.status == 'E':
+            self.status = 'H'
+            
+
+
         if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status != 'H':
             self.show_mine()
 
@@ -65,7 +73,9 @@ class Cell:
         self.is_opened = True
 
     def right_click_actions(self, event):
-        print(self.__repr__())
+        for cells in Cell.all:
+            if cells == self.__repr__():
+                print(self.__repr__())
 
     @staticmethod
     def randomize_mines():
