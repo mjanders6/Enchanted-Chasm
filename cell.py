@@ -35,6 +35,9 @@ class Cell:
         if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status != 'H':
             self.show_mine()
 
+        if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status == 'T':
+            self.show_treasure()
+
         if self.cell_btn_object['state'] == 'normal' and self.status != 'H' and self.status == 'W':
             self.show_wall()
 
@@ -42,8 +45,12 @@ class Cell:
         self.cell_btn_object.configure(bg='red')
         self.cell_btn_object.configure(text=self.status)
 
-    def show_wall(self):
+    def show_treasure(self):
         self.cell_btn_object.configure(bg='green')
+        self.cell_btn_object.configure(text=self.status)
+
+    def show_wall(self):
+        self.cell_btn_object.configure(bg='brown')
         self.cell_btn_object.configure(state='disabled')
         self.cell_btn_object.configure(text=self.status)
 
