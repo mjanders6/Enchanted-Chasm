@@ -8,8 +8,9 @@ class Cell:
     cell_count = settings.CELL_COUNT
     cell_count_label_object = None
     MASTER_BOARD = []
-    def __init__(self, x, y, is_mine=False):
+    def __init__(self, x, y, is_mine=False, is_last_move=False):
         self.is_mine = is_mine
+        self.is_last_move = is_last_move
         self.is_opened = False
         self.cell_btn_object = None
         self.status = ''
@@ -23,7 +24,8 @@ class Cell:
             location,
             width=12,
             height=4,
-            state="disabled"
+            state="disabled",
+            text= ''
         )
         btn.bind('<Button-1>', self.left_click_actions ) # left click
         btn.bind('<Button-3>', self.right_click_actions) # right click
@@ -32,14 +34,14 @@ class Cell:
     def left_click_actions(self, event):
         print(f'({self.x}, {self.y})')
         h_cur = Cell.master_obs['H']
-        # works, just need to be able to upate board and update previous H
+        # works, just need to be able
+        # to upate board and update previous H
         if self.status == 'E':
             Cell.MASTER_BOARD[h_cur[0]][h_cur[1]] = '*'
             Cell.master_obs['H'] = (self.x, self.y)
             Cell.MASTER_BOARD[self.x][self.y] = 'H'
             self.status = 'H'
-            Cell.set_players()
-            
+            # Cell.set_players()
 
         if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status != 'H':
             self.show_mine()
@@ -50,6 +52,7 @@ class Cell:
         if self.cell_btn_object['state'] == 'normal' and self.status != 'H' and self.status == 'W':
             self.show_wall()
 
+        Cell.set_players()
 
     def show_mine(self):
         self.cell_btn_object.configure(bg='red')
@@ -63,6 +66,7 @@ class Cell:
         self.cell_btn_object.configure(bg='brown')
         self.cell_btn_object.configure(state='disabled')
         self.cell_btn_object.configure(text=self.status)
+
 
     def show_cell(self):
         if not self.is_opened:
@@ -111,8 +115,15 @@ class Cell:
                 while j < col:
                     if (cells.x, cells.y) == (i, j):
                         cells.status = Cell.MASTER_BOARD[i][j]
+                        # cells.cell_btn_object.configure(state='disabled')
+                        # cells.is_last_move = False
+                        # cells.is_mine = False
                         if Cell.MASTER_BOARD[i][j] == 'T' or Cell.MASTER_BOARD[i][j] == 'M' or Cell.MASTER_BOARD[i][j] == 'P':
                             cells.is_mine = True
+                        if Cell.MASTER_BOARD[i][j] == '*':
+                            cells.is_last_move = True
+                            cells.cell_btn_object.configure(state='disabled')
+                            cells.cell_btn_object.configure(text=Cell.MASTER_BOARD[i][j])
                         if Cell.MASTER_BOARD[i][j] == 'H':
                             cells.is_mine = False
                             cells.cell_btn_object.configure(text=Cell.MASTER_BOARD[i][j])

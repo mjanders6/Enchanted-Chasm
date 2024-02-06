@@ -300,6 +300,8 @@ def main():
     spawn_locations()
     debug_spawn_locations()
     cheat_board()
+    game_gui()
+
 
 if __name__ == "__main__":
     MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[]}
