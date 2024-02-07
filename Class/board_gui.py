@@ -1,9 +1,6 @@
 from tkinter import *
-from cell import Cell
-import settings
-import utils
-
-
+from Class.cell import Cell
+from Utilities import settings, utils
 
 root = Tk()
 # override window settings

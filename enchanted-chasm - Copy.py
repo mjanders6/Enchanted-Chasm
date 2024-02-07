@@ -46,18 +46,18 @@ List of Functions:
 import random
 import os
 import sys
-from pprint import pprint
+
 sys.path.append(os.path.realpath("."))
 import inquirer
 from inquirer.themes import GreenPassion
 from tkinter import *
-from cell import Cell
-import settings
-import utils
+from Class.cell import Cell
+from Utilities import settings, utils
+
 
 # Build NxN Wall
 def game_board () :
-    file_path = "TheCave.txt"
+    file_path = "GameBoard/TheCave.txt"
     with open(file_path, 'r') as file:
         # Iterate over each line in the file
         for line in file:

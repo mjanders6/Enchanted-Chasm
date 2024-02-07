@@ -1,7 +1,8 @@
-from tkinter import Button, Label
+from tkinter import Button
 import random
-import settings
-import utils
+from Utilities import settings
+
+
 class Cell:
     all = []
     master_obs = {}

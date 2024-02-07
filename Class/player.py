@@ -1,8 +1,3 @@
-from tkinter import Button, Label
-import random
-import settings
-import utils
-import cell as Cell
 class Player:
 
     def __init__(self):
@@ -12,9 +7,9 @@ class Player:
 
 
     def set_players(MASTER_OBSTACLES):
-        Cell.master_obs = {key: tuple(value) for key, value in MASTER_OBSTACLES.items()}
-        for cells in Cell.all:
-            for key, value in Cell.master_obs.items():
+        cell.master_obs = {key: tuple(value) for key, value in MASTER_OBSTACLES.items()}
+        for cells in cell.all:
+            for key, value in cell.master_obs.items():
                 if value == (cells.x, cells.y):
                     cells.is_mine = True
                     cells.status = key
