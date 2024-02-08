@@ -63,35 +63,34 @@ def game_board () :
         for line in file:
             # Split the line into fields based on whitespace
             fields = line.strip().split()
-            MASTER_BOARD.append(fields)
             Cell.MASTER_BOARD.append(fields)
         file.close()
-    return MASTER_BOARD
+    return Cell.MASTER_BOARD
 
 def obstacle_check(object, chk_obj):
-    #  Update MASTER_OBSTACLES to reflect the different relationships
-    lstKeys = list(MASTER_OBSTACLES.keys())
+    #  Update Cell.MASTER_OBSTACLES to reflect the different relationships
+    lstKeys = list(Cell.MASTER_OBSTACLES.keys())
     OBSTACLE_CHECK_LIST.clear()
     # Constant for N spaces from obstacle being compared
     k_obs = 2
     # Calculate upper and lower bounds to check if an obstacle is N spaces close
-    r = MASTER_OBSTACLES[object][0]
-    c = MASTER_OBSTACLES[object][1]
-    r_l = MASTER_OBSTACLES[object][0] - k_obs
-    c_l = MASTER_OBSTACLES[object][1] - k_obs
-    r_upper_bound = MASTER_OBSTACLES[object][0] + k_obs
-    c_upper_bound = MASTER_OBSTACLES[object][1] + k_obs
+    r = Cell.MASTER_OBSTACLES[object][0]
+    c = Cell.MASTER_OBSTACLES[object][1]
+    r_l = Cell.MASTER_OBSTACLES[object][0] - k_obs
+    c_l = Cell.MASTER_OBSTACLES[object][1] - k_obs
+    r_upper_bound = Cell.MASTER_OBSTACLES[object][0] + k_obs
+    c_upper_bound = Cell.MASTER_OBSTACLES[object][1] + k_obs
 
     while r_l <= r_upper_bound and r_l != object:
         if r_l < 0 or r_l >= 20:
             OBSTACLE_CHECK_LIST.update({'O':[r_l, c]})
         else:
-            OBSTACLE_CHECK_LIST.update({MASTER_BOARD[r_l][c]:[r_l,c]})
+            OBSTACLE_CHECK_LIST.update({Cell.MASTER_BOARD[r_l][c]:[r_l,c]})
         while c_l <= c_upper_bound and c_l != object:
             if c_l <  0 or c_l >= 20:
                 OBSTACLE_CHECK_LIST.update({'O': [r, c_l]})
             else:
-                OBSTACLE_CHECK_LIST.update({MASTER_BOARD[r][c_l]:[r, c_l]})
+                OBSTACLE_CHECK_LIST.update({Cell.MASTER_BOARD[r][c_l]:[r, c_l]})
             c_l += 1
         r_l += 1
 
@@ -106,61 +105,41 @@ def obstacle_check(object, chk_obj):
 def obstacle_locations () :
     OBSTACLE_LOCATIONS.clear()
     MASTER_OBSTACLE_LOCATIONS.clear()
-    rows = len(MASTER_BOARD)
+    rows = len(Cell.MASTER_BOARD)
     i = 0
     while i < rows:
         #
         OBSTACLE_LOCATIONS.append([])
         MASTER_OBSTACLE_LOCATIONS.append([])
-        cols = len(MASTER_BOARD[i])
+        cols = len(Cell.MASTER_BOARD[i])
         j = 0
         while j < cols:
-            if (MASTER_BOARD[i][j] == 'W') or (MASTER_BOARD[i][j] == 'P') or (MASTER_BOARD[i][j] == 'H') or (MASTER_BOARD[i][j] == 'T') or (MASTER_BOARD[i][j] == 'M') or (MASTER_BOARD[i][j] == ' '):
+            if (Cell.MASTER_BOARD[i][j] == 'W') or (Cell.MASTER_BOARD[i][j] == 'P') or (Cell.MASTER_BOARD[i][j] == 'H') or (Cell.MASTER_BOARD[i][j] == 'T') or (Cell.MASTER_BOARD[i][j] == 'M') or (Cell.MASTER_BOARD[i][j] == ' '):
                 OBSTACLE_LOCATIONS[i].append(j)
                 MASTER_OBSTACLE_LOCATIONS.append([i, j])
-                if MASTER_BOARD[i][j] != 'W':
-                    MASTER_OBSTACLES.update({ MASTER_BOARD[i][j] : [i, j]})
-                    Cell.master_obs.update({ MASTER_BOARD[i][j] : (i, j)})
+                if Cell.MASTER_BOARD[i][j] != 'W':
+                    Cell.MASTER_OBSTACLES.update({ Cell.MASTER_BOARD[i][j] : [i, j]})
+                    Cell.MASTER_OBSTACLES.update({ Cell.MASTER_BOARD[i][j] : (i, j)})
             j += 1
         i += 1
     return OBSTACLE_LOCATIONS
 
-# Catalog empty locations
-def spawn_locations () :
-    SPAWN_LOCATIONS.clear()
-    MASTER_SPAWN_LOCATIONS.clear()
-    rows = len(MASTER_BOARD)
-    i = 0
-    while i < rows:
-        #
-        SPAWN_LOCATIONS.append([])
-        MASTER_SPAWN_LOCATIONS.append([])
-        cols = len(MASTER_BOARD[i])
-        j = 0
-        while j < cols:
-            if (MASTER_BOARD[i][j] == 'E') :
-                SPAWN_LOCATIONS[i].append(j)
-                MASTER_SPAWN_LOCATIONS.append([i, j])
-            j += 1
-        i += 1
-    return SPAWN_LOCATIONS
-
 # Debug, clean view, to show where the obstacles are
 def debug_spawn_locations () :
     DEBUG_SPAWN_LOCATIONS.clear()
-    rows = len(MASTER_BOARD)
+    rows = len(Cell.MASTER_BOARD)
 
     i = 0
     while i < rows:
         #
         DEBUG_SPAWN_LOCATIONS.append([])
-        cols = len(MASTER_BOARD[i])
+        cols = len(Cell.MASTER_BOARD[i])
         j = 0
         while j < cols:
-            if (MASTER_BOARD[i][j] == 'E') :
+            if (Cell.MASTER_BOARD[i][j] == 'E') :
                 DEBUG_SPAWN_LOCATIONS[i].append(' ')
             else :
-                DEBUG_SPAWN_LOCATIONS[i].append(MASTER_BOARD[i][j])
+                DEBUG_SPAWN_LOCATIONS[i].append(Cell.MASTER_BOARD[i][j])
             j += 1
         i += 1
     return DEBUG_SPAWN_LOCATIONS
@@ -171,18 +150,18 @@ def initialize_hero_location () :
 
 # Spawn an object H, M, W, T, P
 def spawn_object (object) :
-    spawn_locations()
-    rows = len(SPAWN_LOCATIONS) - 1
+    Cell.spawn_locations()
+    rows = len(Cell.SPAWN_LOCATIONS) - 1
 
     ran_row = random.sample(range(1, rows), 1)[0]
-    ran_col = random.choice(SPAWN_LOCATIONS[ran_row])
+    ran_col = random.choice(Cell.SPAWN_LOCATIONS[ran_row])
     # Check to see if location is not within a certain amount of spaces
-    MASTER_OBSTACLES.update({ object : (ran_row, ran_col)})
-    MASTER_BOARD[ran_row][ran_col] = object
+    Cell.MASTER_OBSTACLES.update({ object : (ran_row, ran_col)})
+    Cell.MASTER_BOARD[ran_row][ran_col] = object
 
     obstacle_locations()
     debug_spawn_locations()
-    spawn_locations()
+    Cell.spawn_locations()
 
 def game_gui():
 
@@ -236,27 +215,27 @@ def game_start():
     game_board()
     spawn_object('H')
     obstacle_locations()
-    spawn_locations()
+    Cell.spawn_locations()
     debug_spawn_locations()
-    for i in MASTER_BOARD:
+    for i in Cell.MASTER_BOARD:
         print(i)
 
 def show_board():
-    # for i in MASTER_BOARD:
+    # for i in Cell.MASTER_BOARD:
     #     print(i)
-    rows = len(MASTER_BOARD)
+    rows = len(Cell.MASTER_BOARD)
     board = []
     i = 0
     while i < rows:
         #
         board.append([])
-        cols = len(MASTER_BOARD[i])
+        cols = len(Cell.MASTER_BOARD[i])
         j = 0
         while j < cols:
-            if (MASTER_BOARD[i][j] != 'H') :
+            if (Cell.MASTER_BOARD[i][j] != 'H') :
                 board[i].append(' ')
             else :
-                board[i].append(MASTER_BOARD[i][j])
+                board[i].append(Cell.MASTER_BOARD[i][j])
             j += 1
         i += 1
     for i in board:
@@ -288,7 +267,6 @@ def game_mode():
         if answers['continue'] == 'Quit while your ahead':
             break
 
-
 # Explore the Chasm
 
 def main():
@@ -296,27 +274,24 @@ def main():
     game_board()
     initialize_hero_location()
     obstacle_locations()
-    spawn_locations()
+    Cell.spawn_locations()
     debug_spawn_locations()
     cheat_board()
     game_gui()
 
 
 if __name__ == "__main__":
-    MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[]}
-    MASTER_BOARD = []
-    MASTER_BOARD_LIST = []
+    Cell.MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[]}
+    Cell.MASTER_BOARD = []
+    Cell.MASTER_BOARD_LIST = []
     OBSTACLE_LOCATIONS = []
-    SPAWN_LOCATIONS = []
+    Cell.SPAWN_LOCATIONS = []
     DEBUG_SPAWN_LOCATIONS = []
     HISTORICAL_MOVEMENTS = []
     OBSTACLE_CHECK_LIST = {}
 
     # Used to compare a list of tuples
     MASTER_OBSTACLE_LOCATIONS = []
-    MASTER_SPAWN_LOCATIONS = []
+    Cell.MASTER_SPAWN_LOCATIONS = []
 
-    # Used to compare a list of tuples
-    MASTER_OBSTACLE_LOCATIONS = []
-    MASTER_SPAWN_LOCATIONS = []
     main()

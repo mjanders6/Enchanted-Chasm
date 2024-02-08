@@ -5,7 +5,9 @@ from Utilities import settings
 
 class Cell:
     all = []
-    master_obs = {}
+    MASTER_OBSTACLES = {}
+    SPAWN_LOCATIONS = []
+    MASTER_SPAWN_LOCATIONS = []
     cell_count = settings.CELL_COUNT
     cell_count_label_object = None
     MASTER_BOARD = []
@@ -34,12 +36,12 @@ class Cell:
 
     def left_click_actions(self, event):
         print(f'({self.x}, {self.y})')
-        h_cur = Cell.master_obs['H']
+        h_cur = Cell.MASTER_OBSTACLES['H']
         # works, just need to be able
         # to upate board and update previous H
         if self.status == 'E':
             Cell.MASTER_BOARD[h_cur[0]][h_cur[1]] = '*'
-            Cell.master_obs['H'] = (self.x, self.y)
+            Cell.MASTER_OBSTACLES['H'] = (self.x, self.y)
             Cell.MASTER_BOARD[self.x][self.y] = 'H'
             self.status = 'H'
             # Cell.set_players()
@@ -68,6 +70,23 @@ class Cell:
         self.cell_btn_object.configure(state='disabled')
         self.cell_btn_object.configure(text=self.status)
 
+    @staticmethod
+    def spawn_locations():
+        global SPAWN_LOCATIONS
+        Cell.SPAWN_LOCATIONS.clear()
+        rows = len(Cell.MASTER_BOARD)
+        i = 0
+        while i < rows:
+            #
+            Cell.SPAWN_LOCATIONS.append([])
+            cols = len(Cell.MASTER_BOARD[i])
+            j = 0
+            while j < cols:
+                if (Cell.MASTER_BOARD[i][j] == 'E'):
+                    Cell.SPAWN_LOCATIONS[i].append(j)
+                j += 1
+            i += 1
+        return Cell.SPAWN_LOCATIONS
 
     def show_cell(self):
         if not self.is_opened:
@@ -80,7 +99,7 @@ class Cell:
         self.is_opened = True
 
     def right_click_actions(self, event):
-        print(self.status)
+        print(self.cell_btn_object['state'])
 
     @staticmethod
     def randomize_mines():
@@ -90,20 +109,6 @@ class Cell:
         for picked_cells in picked_cells:
             picked_cells.is_mine = True
             print(picked_cells)
-
-    # Sets the status of the cell to the obstacle value
-    # def set_players(MASTER_OBSTACLES):
-    #     Cell.master_obs = {key: tuple(value) for key, value in MASTER_OBSTACLES.items()}
-    #     for cells in Cell.all:
-    #         for key, value in Cell.master_obs.items():
-    #             if value == (cells.x, cells.y):
-    #                 print(cells)
-    #                 cells.is_mine = True
-    #                 cells.status = key
-    #                 if key == 'H':
-    #                     cells.cell_btn_object.configure(text=key)
-    #                     for i in cells.surrounded_cells:
-    #                         i.cell_btn_object.configure(state='normal')
 
     @staticmethod
     def set_players():
@@ -116,9 +121,6 @@ class Cell:
                 while j < col:
                     if (cells.x, cells.y) == (i, j):
                         cells.status = Cell.MASTER_BOARD[i][j]
-                        # cells.cell_btn_object.configure(state='disabled')
-                        # cells.is_last_move = False
-                        # cells.is_mine = False
                         if Cell.MASTER_BOARD[i][j] == 'T' or Cell.MASTER_BOARD[i][j] == 'M' or Cell.MASTER_BOARD[i][j] == 'P':
                             cells.is_mine = True
                         if Cell.MASTER_BOARD[i][j] == '*':
@@ -134,18 +136,6 @@ class Cell:
 
                     j += 1
                 i += 1
-
-    # @staticmethod
-    # def set_board():
-    #     rows = len(Cell.MASTER_BOARD)
-    #     i = 0
-    #     while i < rows:
-    #         cols = len(Cell.MASTER_BOARD[i])
-    #         j = 0
-    #         while j < cols:
-    #             Cell.MASTER_BOARD[i][j]
-    #             j += 1
-    #         i += 1
 
     def get_cell_by_axis(self, x,y):
         # Return a cell object based on the value of x,y
@@ -164,8 +154,6 @@ class Cell:
 
         cells = [cell for cell in cells if cell is not None]
         return cells
-
-
 
     def __repr__(self):
         return f"Cell({self.x}, {self.y})"
