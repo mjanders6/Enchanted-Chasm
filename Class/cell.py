@@ -53,6 +53,7 @@ class Cell:
 
         if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status == 'M':
             self.show_monster()
+            Cell.game_over()
 
         if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status == 'T':
             self.show_treasure()
@@ -65,6 +66,8 @@ class Cell:
     def show_monster(self):
         self.cell_btn_object.configure(bg='red')
         self.cell_btn_object.configure(text=self.status)
+        Cell.game_over()
+
 
     def show_treasure(self):
         self.cell_btn_object.configure(bg='green')
@@ -125,6 +128,20 @@ class Cell:
                         #     cells.is_mine = True
                         #     cells.cell_btn_object.configure(state='normal')
 
+                    j += 1
+                i += 1
+
+    @staticmethod
+    def game_over():
+        for cells in Cell.all:
+            row = len(Game_Board.MASTER_BOARD)
+            i = 0
+            while i < row:
+                j = 0
+                col = len(Game_Board.MASTER_BOARD[i])
+                while j < col:
+                    if (cells.x, cells.y) == (i, j):
+                        cells.cell_btn_object.configure(state='disabled')
                     j += 1
                 i += 1
 
