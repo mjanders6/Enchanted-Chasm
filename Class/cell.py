@@ -120,7 +120,7 @@ class Cell:
                             cells.is_mine = False
                             cells.cell_btn_object.configure(state='normal')
                             cells.cell_btn_object.configure(text=Game_Board.MASTER_BOARD[i][j])
-                        if Game_Board.MASTER_BOARD[i][j] == 'T' or Game_Board.MASTER_BOARD[i][j] == 'M' or Game_Board.MASTER_BOARD[i][j] == 'P' or Game_Board.MASTER_BOARD[i][j] == 'W':
+                        if Game_Board.MASTER_BOARD[i][j] == 'T' or Game_Board.MASTER_BOARD[i][j] == 'M' or Game_Board.MASTER_BOARD[i][j] == 'P':
                             cells.is_mine = True
                             cells.cell_btn_object.configure(state='normal')
 
