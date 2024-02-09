@@ -50,11 +50,12 @@ sys.path.append(os.path.realpath("."))
 import inquirer
 from inquirer.themes import GreenPassion
 from tkinter import *
+from tkinter import ttk
 from Class.cell import Cell
 from Class.board import Game_Board
 from Utilities import settings, utils
 
-file = "GameBoard/TheCave.txt"
+file = "GameBoard/TheCave - Copy.txt"
 
 master_board = Game_Board()
 
@@ -112,14 +113,19 @@ def game_gui():
         height=utils.height_prct(25)
     )
     top_frame.place(x=0, y=0)
+    head_label = ttk.Label(top_frame, text='The Enchanted Chasm', font=('typewriter', 40), background='grey')
+    head_label.place(x = utils.width_prct(25), y=utils.height_prct(10))
+
 
     left_frame = Frame(
         root,
-        bg='gray',
+        bg='blue',
         width=utils.width_prct(25),
         height=utils.height_prct(75)
     )
-    left_frame.place(x=0, y=utils.height_prct(25))
+    left_frame.place(x=utils.width_prct(75), y=utils.height_prct(25))
+    left_label = ttk.Label(left_frame, text='Notes', font=('typewriter', 20), background='blue')
+    left_label.place(x=150, y=25)
 
     center_frame = Frame(
         root,
@@ -128,7 +134,7 @@ def game_gui():
         height=utils.height_prct(75)
     )
     center_frame.place(
-        x=utils.width_prct(25),
+        x=0,
         y=utils.height_prct(25))
 
     for x in range(settings.GRID_SIZE):
