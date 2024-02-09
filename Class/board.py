@@ -63,7 +63,8 @@ class Game_Board:
                 j += 1
             i += 1
         for i in board:
-            print(' '.join(i))
+            # print(' '.join(i))
+            print(i)
 
     @staticmethod
     def obstacle_locations():

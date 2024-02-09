@@ -79,6 +79,7 @@ class Cell:
         self.is_opened = True
 
     def right_click_actions(self, event):
+        print(f'({self.x}, {self.y})')
         print(self.cell_btn_object['state'])
 
     @staticmethod
@@ -101,24 +102,54 @@ class Cell:
                 while j < col:
                     if (cells.x, cells.y) == (i, j):
                         cells.status = Game_Board.MASTER_BOARD[i][j]
-                        cells.cell_btn_object.configure(state='disabled')
-                        if Game_Board.MASTER_BOARD[i][j] == 'T' or Game_Board.MASTER_BOARD[i][j] == 'M' or Game_Board.MASTER_BOARD[i][j] == 'P':
-                            cells.is_mine = True
-                        if Game_Board.MASTER_BOARD[i][j] == '*':
-                            cells.is_last_move = True
-                            cells.is_mine = False
-                            cells.cell_btn_object.configure(state='disabled')
-                            cells.cell_btn_object.configure(text=Game_Board.MASTER_BOARD[i][j])
+                        # cells.cell_btn_object.configure(state='disabled')
                         if Game_Board.MASTER_BOARD[i][j] == 'H':
                             cells.is_mine = False
                             cells.cell_btn_object.configure(text=Game_Board.MASTER_BOARD[i][j])
                             for k in cells.surrounded_cells:
                                 k.cell_btn_object.configure(state='normal')
+                        if Game_Board.MASTER_BOARD[i][j] == '*':
+                            cells.is_last_move = True
+                            cells.is_mine = False
+                            cells.cell_btn_object.configure(state='normal')
+                            cells.cell_btn_object.configure(text=Game_Board.MASTER_BOARD[i][j])
+                        if Game_Board.MASTER_BOARD[i][j] == 'T' or Game_Board.MASTER_BOARD[i][j] == 'M' or Game_Board.MASTER_BOARD[i][j] == 'P' or Game_Board.MASTER_BOARD[i][j] == 'W':
+                            cells.is_mine = True
+                            cells.cell_btn_object.configure(state='normal')
 
                     j += 1
                 i += 1
 
-    def get_cell_by_axis(self, x,y):
+    # @staticmethod
+    # def set_players():
+    #     for cells in Cell.all:
+    #         row = len(Game_Board.MASTER_BOARD)
+    #         i = 0
+    #         while i < row:
+    #             j = 0
+    #             col = len(Game_Board.MASTER_BOARD[i])
+    #             while j < col:
+    #                 if (cells.x, cells.y) == (i, j):
+    #                     cells.status = Game_Board.MASTER_BOARD[i][j]
+    #                     cells.cell_btn_object.configure(state='disabled')
+    #                     if Game_Board.MASTER_BOARD[i][j] == 'T' or Game_Board.MASTER_BOARD[i][j] == 'M' or Game_Board.MASTER_BOARD[i][j] == 'P' or Game_Board.MASTER_BOARD[i][j] == 'W':
+    #                         cells.is_mine = True
+    #                         cells.cell_btn_object.configure(state='normal')
+    #                     if Game_Board.MASTER_BOARD[i][j] == '*':
+    #                         cells.is_last_move = True
+    #                         cells.is_mine = False
+    #                         cells.cell_btn_object.configure(state='normal')
+    #                         cells.cell_btn_object.configure(text=Game_Board.MASTER_BOARD[i][j])
+    #                     if Game_Board.MASTER_BOARD[i][j] == 'H':
+    #                         cells.is_mine = False
+    #                         cells.cell_btn_object.configure(text=Game_Board.MASTER_BOARD[i][j])
+    #                         for k in cells.surrounded_cells:
+    #                             k.cell_btn_object.configure(state='normal')
+    #
+    #                 j += 1
+    #             i += 1
+
+    def get_cell_by_axis(self, x, y):
         # Return a cell object based on the value of x,y
         for cell in Cell.all:
             if cell.x == x and cell.y == y:

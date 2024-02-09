@@ -206,23 +206,11 @@ def main():
     #game_mode()
     master_board.init_board(file)
     master_board.spawn_locations()
+    master_board.button_locations()
     initialize_hero_location()
+    cheat_board()
     game_gui()
 
 
 if __name__ == "__main__":
     main()
-    # Cell.MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[]}
-    # Cell.MASTER_BOARD = []
-    # Cell.MASTER_BOARD_LIST = []
-    # OBSTACLE_LOCATIONS = []
-    # Cell.SPAWN_LOCATIONS = []
-    # DEBUG_SPAWN_LOCATIONS = []
-    # HISTORICAL_MOVEMENTS = []
-    # OBSTACLE_CHECK_LIST = {}
-
-    # Used to compare a list of tuples
-    # MASTER_OBSTACLE_LOCATIONS = []
-    # Cell.MASTER_SPAWN_LOCATIONS = []
-
-    # main()
