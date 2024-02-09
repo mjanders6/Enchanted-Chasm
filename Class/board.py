@@ -1,5 +1,11 @@
 '''
 Game board Class
+
+- create the board from a file
+- hold master level list of whats on the board
+- holds locations of spawnable locations
+- keep track of cells
+- tells the button if its disabled or not
 '''
 import random
 from tkinter import *

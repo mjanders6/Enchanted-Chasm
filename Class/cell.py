@@ -1,3 +1,10 @@
+'''
+Buttons/Cells
+- holds x,y location
+- holds status
+- binds clicking
+'''
+
 from tkinter import Button
 import random
 from Class.board import Game_Board
