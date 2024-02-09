@@ -76,12 +76,12 @@ def obstacle_check(object, chk_obj):
         if r_l < 0 or r_l >= 20:
             master_board.OBSTACLE_CHECK_LIST.update({'O':[r_l, c]})
         else:
-            master_board.OBSTACLE_CHECK_LIST.update({Cell.MASTER_BOARD[r_l][c]:[r_l,c]})
+            master_board.OBSTACLE_CHECK_LIST.update({master_board.MASTER_BOARD[r_l][c]:[r_l,c]})
         while c_l <= c_upper_bound and c_l != object:
             if c_l <  0 or c_l >= 20:
                 master_board.OBSTACLE_CHECK_LIST.update({'O': [r, c_l]})
             else:
-                master_board.OBSTACLE_CHECK_LIST.update({Cell.MASTER_BOARD[r][c_l]:[r, c_l]})
+                master_board.OBSTACLE_CHECK_LIST.update({master_board.MASTER_BOARD[r][c_l]:[r, c_l]})
             c_l += 1
         r_l += 1
 
@@ -145,30 +145,24 @@ def game_gui():
 
 # Initialize the game
 def game_start():
-    game_board()
-    spawn_object('H')
-    obstacle_locations()
-    Cell.spawn_locations()
-    debug_spawn_locations()
-    for i in Cell.MASTER_BOARD:
-        print(i)
+    pass
 
 def show_board():
     # for i in Cell.MASTER_BOARD:
     #     print(i)
-    rows = len(Cell.MASTER_BOARD)
+    rows = len(master_board.MASTER_BOARD)
     board = []
     i = 0
     while i < rows:
         #
         board.append([])
-        cols = len(Cell.MASTER_BOARD[i])
+        cols = len(master_board.MASTER_BOARD[i])
         j = 0
         while j < cols:
-            if (Cell.MASTER_BOARD[i][j] != 'H') :
+            if (master_board.MASTER_BOARD[i][j] != 'H') :
                 board[i].append(' ')
             else :
-                board[i].append(Cell.MASTER_BOARD[i][j])
+                board[i].append(master_board.MASTER_BOARD[i][j])
             j += 1
         i += 1
     for i in board:
