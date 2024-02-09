@@ -46,122 +46,55 @@ List of Functions:
 import random
 import os
 import sys
-
 sys.path.append(os.path.realpath("."))
 import inquirer
 from inquirer.themes import GreenPassion
 from tkinter import *
 from Class.cell import Cell
+from Class.board import Game_Board
 from Utilities import settings, utils
 
+file = "GameBoard/TheCave.txt"
 
-# Build NxN Wall
-def game_board () :
-    file_path = "GameBoard/TheCave.txt"
-    with open(file_path, 'r') as file:
-        # Iterate over each line in the file
-        for line in file:
-            # Split the line into fields based on whitespace
-            fields = line.strip().split()
-            Cell.MASTER_BOARD.append(fields)
-        file.close()
-    return Cell.MASTER_BOARD
+master_board = Game_Board()
 
 def obstacle_check(object, chk_obj):
     #  Update Cell.MASTER_OBSTACLES to reflect the different relationships
-    lstKeys = list(Cell.MASTER_OBSTACLES.keys())
-    OBSTACLE_CHECK_LIST.clear()
+    lstKeys = list(master_board.MASTER_OBSTACLES.keys())
+    master_board.OBSTACLE_CHECK_LIST.clear()
     # Constant for N spaces from obstacle being compared
     k_obs = 2
     # Calculate upper and lower bounds to check if an obstacle is N spaces close
-    r = Cell.MASTER_OBSTACLES[object][0]
-    c = Cell.MASTER_OBSTACLES[object][1]
-    r_l = Cell.MASTER_OBSTACLES[object][0] - k_obs
-    c_l = Cell.MASTER_OBSTACLES[object][1] - k_obs
-    r_upper_bound = Cell.MASTER_OBSTACLES[object][0] + k_obs
-    c_upper_bound = Cell.MASTER_OBSTACLES[object][1] + k_obs
+    r = master_board.MASTER_OBSTACLES[object][0]
+    c = master_board.MASTER_OBSTACLES[object][1]
+    r_l = master_board.MASTER_OBSTACLES[object][0] - k_obs
+    c_l = master_board.MASTER_OBSTACLES[object][1] - k_obs
+    r_upper_bound = master_board.MASTER_OBSTACLES[object][0] + k_obs
+    c_upper_bound = master_board.MASTER_OBSTACLES[object][1] + k_obs
 
     while r_l <= r_upper_bound and r_l != object:
         if r_l < 0 or r_l >= 20:
-            OBSTACLE_CHECK_LIST.update({'O':[r_l, c]})
+            master_board.OBSTACLE_CHECK_LIST.update({'O':[r_l, c]})
         else:
-            OBSTACLE_CHECK_LIST.update({Cell.MASTER_BOARD[r_l][c]:[r_l,c]})
+            master_board.OBSTACLE_CHECK_LIST.update({Cell.MASTER_BOARD[r_l][c]:[r_l,c]})
         while c_l <= c_upper_bound and c_l != object:
             if c_l <  0 or c_l >= 20:
-                OBSTACLE_CHECK_LIST.update({'O': [r, c_l]})
+                master_board.OBSTACLE_CHECK_LIST.update({'O': [r, c_l]})
             else:
-                OBSTACLE_CHECK_LIST.update({Cell.MASTER_BOARD[r][c_l]:[r, c_l]})
+                master_board.OBSTACLE_CHECK_LIST.update({Cell.MASTER_BOARD[r][c_l]:[r, c_l]})
             c_l += 1
         r_l += 1
 
-    if chk_obj in OBSTACLE_CHECK_LIST:
+    if chk_obj in master_board.OBSTACLE_CHECK_LIST:
         #print(f'Collision detected')
         return 1
     else:
         #print(f'No Collision Detected')
         return 0
 
-# Store a list of locations where a location is not blank
-def obstacle_locations () :
-    OBSTACLE_LOCATIONS.clear()
-    MASTER_OBSTACLE_LOCATIONS.clear()
-    rows = len(Cell.MASTER_BOARD)
-    i = 0
-    while i < rows:
-        #
-        OBSTACLE_LOCATIONS.append([])
-        MASTER_OBSTACLE_LOCATIONS.append([])
-        cols = len(Cell.MASTER_BOARD[i])
-        j = 0
-        while j < cols:
-            if (Cell.MASTER_BOARD[i][j] == 'W') or (Cell.MASTER_BOARD[i][j] == 'P') or (Cell.MASTER_BOARD[i][j] == 'H') or (Cell.MASTER_BOARD[i][j] == 'T') or (Cell.MASTER_BOARD[i][j] == 'M') or (Cell.MASTER_BOARD[i][j] == ' '):
-                OBSTACLE_LOCATIONS[i].append(j)
-                MASTER_OBSTACLE_LOCATIONS.append([i, j])
-                if Cell.MASTER_BOARD[i][j] != 'W':
-                    Cell.MASTER_OBSTACLES.update({ Cell.MASTER_BOARD[i][j] : [i, j]})
-                    Cell.MASTER_OBSTACLES.update({ Cell.MASTER_BOARD[i][j] : (i, j)})
-            j += 1
-        i += 1
-    return OBSTACLE_LOCATIONS
-
-# Debug, clean view, to show where the obstacles are
-def debug_spawn_locations () :
-    DEBUG_SPAWN_LOCATIONS.clear()
-    rows = len(Cell.MASTER_BOARD)
-
-    i = 0
-    while i < rows:
-        #
-        DEBUG_SPAWN_LOCATIONS.append([])
-        cols = len(Cell.MASTER_BOARD[i])
-        j = 0
-        while j < cols:
-            if (Cell.MASTER_BOARD[i][j] == 'E') :
-                DEBUG_SPAWN_LOCATIONS[i].append(' ')
-            else :
-                DEBUG_SPAWN_LOCATIONS[i].append(Cell.MASTER_BOARD[i][j])
-            j += 1
-        i += 1
-    return DEBUG_SPAWN_LOCATIONS
-
 # Initialize the hero on the board
-def initialize_hero_location () :
-    spawn_object('H')
-
-# Spawn an object H, M, W, T, P
-def spawn_object (object) :
-    Cell.spawn_locations()
-    rows = len(Cell.SPAWN_LOCATIONS) - 1
-
-    ran_row = random.sample(range(1, rows), 1)[0]
-    ran_col = random.choice(Cell.SPAWN_LOCATIONS[ran_row])
-    # Check to see if location is not within a certain amount of spaces
-    Cell.MASTER_OBSTACLES.update({ object : (ran_row, ran_col)})
-    Cell.MASTER_BOARD[ran_row][ran_col] = object
-
-    obstacle_locations()
-    debug_spawn_locations()
-    Cell.spawn_locations()
+def initialize_hero_location ():
+    Game_Board.spawn_object('H')
 
 def game_gui():
 
@@ -242,7 +175,7 @@ def show_board():
         print(' '.join(i))
 
 def cheat_board():
-    for i in DEBUG_SPAWN_LOCATIONS:
+    for i in master_board.DEBUG_SPAWN_LOCATIONS:
         print(' '.join(i))
 
 def game_mode():
@@ -271,27 +204,25 @@ def game_mode():
 
 def main():
     #game_mode()
-    game_board()
+    master_board.init_board(file)
+    master_board.spawn_locations()
     initialize_hero_location()
-    obstacle_locations()
-    Cell.spawn_locations()
-    debug_spawn_locations()
-    cheat_board()
     game_gui()
 
 
 if __name__ == "__main__":
-    Cell.MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[]}
-    Cell.MASTER_BOARD = []
-    Cell.MASTER_BOARD_LIST = []
-    OBSTACLE_LOCATIONS = []
-    Cell.SPAWN_LOCATIONS = []
-    DEBUG_SPAWN_LOCATIONS = []
-    HISTORICAL_MOVEMENTS = []
-    OBSTACLE_CHECK_LIST = {}
+    main()
+    # Cell.MASTER_OBSTACLES = {'T':[], 'M':[], 'H':[], 'P':[]}
+    # Cell.MASTER_BOARD = []
+    # Cell.MASTER_BOARD_LIST = []
+    # OBSTACLE_LOCATIONS = []
+    # Cell.SPAWN_LOCATIONS = []
+    # DEBUG_SPAWN_LOCATIONS = []
+    # HISTORICAL_MOVEMENTS = []
+    # OBSTACLE_CHECK_LIST = {}
 
     # Used to compare a list of tuples
-    MASTER_OBSTACLE_LOCATIONS = []
-    Cell.MASTER_SPAWN_LOCATIONS = []
+    # MASTER_OBSTACLE_LOCATIONS = []
+    # Cell.MASTER_SPAWN_LOCATIONS = []
 
-    main()
+    # main()

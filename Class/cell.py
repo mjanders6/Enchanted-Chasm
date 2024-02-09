@@ -1,16 +1,14 @@
 from tkinter import Button
 import random
+from Class.board import Game_Board
 from Utilities import settings
-
 
 class Cell:
     all = []
-    MASTER_OBSTACLES = {}
-    SPAWN_LOCATIONS = []
-    MASTER_SPAWN_LOCATIONS = []
+    all2 = []
     cell_count = settings.CELL_COUNT
     cell_count_label_object = None
-    MASTER_BOARD = []
+
     def __init__(self, x, y, is_mine=False, is_last_move=False):
         self.is_mine = is_mine
         self.is_last_move = is_last_move
@@ -36,15 +34,15 @@ class Cell:
 
     def left_click_actions(self, event):
         print(f'({self.x}, {self.y})')
-        h_cur = Cell.MASTER_OBSTACLES['H']
+        h_cur = Game_Board.MASTER_OBSTACLES['H']
         # works, just need to be able
         # to upate board and update previous H
-        if self.status == 'E':
-            Cell.MASTER_BOARD[h_cur[0]][h_cur[1]] = '*'
-            Cell.MASTER_OBSTACLES['H'] = (self.x, self.y)
-            Cell.MASTER_BOARD[self.x][self.y] = 'H'
+        if self.status == 'E' and self.cell_btn_object['state'] == 'normal':
+            Game_Board.MASTER_BOARD[h_cur[0]][h_cur[1]] = '*'
+            Game_Board.MASTER_OBSTACLES['H'] = (self.x, self.y)
+            Game_Board.MASTER_BOARD[self.x][self.y] = 'H'
             self.status = 'H'
-            # Cell.set_players()
+            Cell.set_players()
 
         if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status != 'H':
             self.show_mine()
@@ -69,24 +67,6 @@ class Cell:
         self.cell_btn_object.configure(bg='brown')
         self.cell_btn_object.configure(state='disabled')
         self.cell_btn_object.configure(text=self.status)
-
-    @staticmethod
-    def spawn_locations():
-        global SPAWN_LOCATIONS
-        Cell.SPAWN_LOCATIONS.clear()
-        rows = len(Cell.MASTER_BOARD)
-        i = 0
-        while i < rows:
-            #
-            Cell.SPAWN_LOCATIONS.append([])
-            cols = len(Cell.MASTER_BOARD[i])
-            j = 0
-            while j < cols:
-                if (Cell.MASTER_BOARD[i][j] == 'E'):
-                    Cell.SPAWN_LOCATIONS[i].append(j)
-                j += 1
-            i += 1
-        return Cell.SPAWN_LOCATIONS
 
     def show_cell(self):
         if not self.is_opened:
@@ -113,24 +93,25 @@ class Cell:
     @staticmethod
     def set_players():
         for cells in Cell.all:
-            row = len(Cell.MASTER_BOARD)
+            row = len(Game_Board.MASTER_BOARD)
             i = 0
             while i < row:
                 j = 0
-                col = len(Cell.MASTER_BOARD[i])
+                col = len(Game_Board.MASTER_BOARD[i])
                 while j < col:
                     if (cells.x, cells.y) == (i, j):
-                        cells.status = Cell.MASTER_BOARD[i][j]
-                        if Cell.MASTER_BOARD[i][j] == 'T' or Cell.MASTER_BOARD[i][j] == 'M' or Cell.MASTER_BOARD[i][j] == 'P':
+                        cells.status = Game_Board.MASTER_BOARD[i][j]
+                        cells.cell_btn_object.configure(state='disabled')
+                        if Game_Board.MASTER_BOARD[i][j] == 'T' or Game_Board.MASTER_BOARD[i][j] == 'M' or Game_Board.MASTER_BOARD[i][j] == 'P':
                             cells.is_mine = True
-                        if Cell.MASTER_BOARD[i][j] == '*':
+                        if Game_Board.MASTER_BOARD[i][j] == '*':
                             cells.is_last_move = True
                             cells.is_mine = False
                             cells.cell_btn_object.configure(state='disabled')
-                            cells.cell_btn_object.configure(text=Cell.MASTER_BOARD[i][j])
-                        if Cell.MASTER_BOARD[i][j] == 'H':
+                            cells.cell_btn_object.configure(text=Game_Board.MASTER_BOARD[i][j])
+                        if Game_Board.MASTER_BOARD[i][j] == 'H':
                             cells.is_mine = False
-                            cells.cell_btn_object.configure(text=Cell.MASTER_BOARD[i][j])
+                            cells.cell_btn_object.configure(text=Game_Board.MASTER_BOARD[i][j])
                             for k in cells.surrounded_cells:
                                 k.cell_btn_object.configure(state='normal')
 
