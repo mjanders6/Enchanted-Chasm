@@ -59,7 +59,6 @@ file = "GameBoard/TheCave - Copy.txt"
 
 master_board = Game_Board()
 
-
 def obstacle_check(object, chk_obj):
     #  Update Cell.MASTER_OBSTACLES to reflect the different relationships
     lstKeys = list(master_board.MASTER_OBSTACLES.keys())
@@ -97,8 +96,6 @@ def obstacle_check(object, chk_obj):
 # Initialize the hero on the board
 def initialize_hero_location ():
     Game_Board.spawn_object('H')
-    if obstacle_check('H', 'M') == 1:
-        Game_Board.spawn_object('H')
 
 def game_gui():
 

@@ -18,7 +18,7 @@ class Game_Board:
     DEBUG_SPAWN_LOCATIONS = []
     OBSTACLE_LOCATIONS = []
     MASTER_OBSTACLES = {}
-    OBSTACLE_CHECK_LIST =[]
+    OBSTACLE_CHECK_LIST ={}
     def __init__(self):
         """All scores are initially 0."""
 
