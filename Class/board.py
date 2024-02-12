@@ -19,6 +19,7 @@ class Game_Board:
     OBSTACLE_LOCATIONS = []
     MASTER_OBSTACLES = {}
     OBSTACLE_CHECK_LIST ={}
+    GAME_TEXT = {}
     def __init__(self):
         """All scores are initially 0."""
 

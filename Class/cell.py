@@ -5,7 +5,8 @@ Buttons/Cells
 - binds clicking
 '''
 
-from tkinter import Button
+from tkinter import Button, messagebox
+import sys
 import random
 from Class.board import Game_Board
 from Utilities import settings
@@ -15,6 +16,7 @@ class Cell:
     all2 = []
     cell_count = settings.CELL_COUNT
     cell_count_label_object = None
+    click = 0
 
     def __init__(self, x, y, is_mine=False, is_last_move=False):
         self.is_mine = is_mine
@@ -37,6 +39,7 @@ class Cell:
         )
         btn.bind('<Button-1>', self.left_click_actions ) # left click
         btn.bind('<Button-3>', self.right_click_actions) # right click
+        # btn.bind('<Button-3>', self.log, add='+')  # right click
         self.cell_btn_object = btn
 
     def left_click_actions(self, event):
@@ -53,7 +56,6 @@ class Cell:
 
         if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status == 'M':
             self.show_monster()
-            Cell.game_over()
 
         if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status == 'T':
             self.show_treasure()
@@ -67,7 +69,6 @@ class Cell:
         self.cell_btn_object.configure(bg='red')
         self.cell_btn_object.configure(text=self.status)
         Cell.game_over()
-
 
     def show_treasure(self):
         self.cell_btn_object.configure(bg='green')
@@ -91,6 +92,8 @@ class Cell:
     def right_click_actions(self, event):
         print(f'({self.x}, {self.y})')
         print(self.cell_btn_object['state'])
+        # Cell.click += 1
+        # Game_Board.GAME_TEXT[Cell.click] = f'({self.x}, {self.y})'
 
     @staticmethod
     def randomize_mines():
@@ -132,18 +135,26 @@ class Cell:
                 i += 1
 
     @staticmethod
+    def print_tex():
+        l = ['list 1', 'list 2']
+        return l
+
+    @staticmethod
     def game_over():
-        for cells in Cell.all:
-            row = len(Game_Board.MASTER_BOARD)
-            i = 0
-            while i < row:
-                j = 0
-                col = len(Game_Board.MASTER_BOARD[i])
-                while j < col:
-                    if (cells.x, cells.y) == (i, j):
-                        cells.cell_btn_object.configure(state='disabled')
-                    j += 1
-                i += 1
+        messagebox.showinfo(title='Monster Killed You!', message='You have found the monster! You are now dead!\n :-( so sad')
+
+        sys.exit()
+        # for cells in Cell.all:
+        #     row = len(Game_Board.MASTER_BOARD)
+        #     i = 0
+        #     while i < row:
+        #         j = 0
+        #         col = len(Game_Board.MASTER_BOARD[i])
+        #         while j < col:
+        #             if (cells.x, cells.y) == (i, j):
+        #                 cells.cell_btn_object.configure(state='disabled')
+        #             j += 1
+        #         i += 1
 
     def get_cell_by_axis(self, x, y):
         # Return a cell object based on the value of x,y

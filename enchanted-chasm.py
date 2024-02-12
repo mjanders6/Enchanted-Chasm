@@ -50,6 +50,7 @@ sys.path.append(os.path.realpath("."))
 import inquirer
 from inquirer.themes import GreenPassion
 from tkinter import *
+import tkinter as tk
 from tkinter import ttk
 from Class.cell import Cell
 from Class.board import Game_Board
@@ -119,16 +120,22 @@ def game_gui():
     head_label = ttk.Label(top_frame, text='The Enchanted Chasm', font=('typewriter', 40), background='grey')
     head_label.place(x = utils.width_prct(25), y=utils.height_prct(10))
 
+    langs = ('Java', 'C#', 'C', 'C++', 'Python',
+             'Go', 'JavaScript', 'PHP', 'Swift')
+    var = tk.Variable(value=langs)
 
-    left_frame = Frame(
+    right_frame = Frame(
         root,
         bg='blue',
         width=utils.width_prct(25),
         height=utils.height_prct(75)
     )
-    left_frame.place(x=utils.width_prct(75), y=utils.height_prct(25))
-    left_label = ttk.Label(left_frame, text='Notes', font=('typewriter', 20), background='blue')
-    left_label.place(x=150, y=25)
+    right_frame.place(x=utils.width_prct(75), y=utils.height_prct(25))
+    lbl_frame = ttk.Label(right_frame, text='Notes', font=('typewriter', 20), background='blue')
+    lbl_frame.place(x=150, y=25)
+    text = Text(right_frame, height=8, width=42)
+    text.place(x=5, y=60)
+    # text.insert('1.0', Game_Board.GAME_TEXT)
 
     center_frame = Frame(
         root,
@@ -136,9 +143,7 @@ def game_gui():
         width=utils.width_prct(75),
         height=utils.height_prct(75)
     )
-    center_frame.place(
-        x=0,
-        y=utils.height_prct(25))
+    center_frame.place(x=0, y=utils.height_prct(25))
 
 
     for x in range(settings.GRID_SIZE):
