@@ -19,6 +19,6 @@ class gui_txtbox(ttk.Frame):
     @staticmethod
     def log_capture(text):
         text.insert(tk.INSERT, f'This is the game log:' + '\n')
-        for index, value in Game_Board.OBSTACLE_CHECK_LIST.items():
+        for index, value in Game_Board.GAME_TEXT.items():
             text.insert(tk.INSERT, f'{value}' + '\n')
 

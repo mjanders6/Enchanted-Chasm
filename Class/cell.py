@@ -44,8 +44,6 @@ class Cell:
         self.cell_btn_object = btn
 
     def left_click_actions(self, event):
-        Cell.click += 1
-        Game_Board.GAME_TEXT[Cell.click] = f'({self.x}, {self.y})'
         print(f'({self.x}, {self.y})')
         h_cur = Game_Board.MASTER_OBSTACLES['H']
         # works, just need to be able
@@ -93,10 +91,9 @@ class Cell:
         self.is_opened = True
 
     def right_click_actions(self, event):
-        # print(f'({self.x}, {self.y})')
-        # print(self.cell_btn_object['state'])
         Cell.click += 1
         Game_Board.GAME_TEXT[Cell.click] = f'({self.x}, {self.y})'
+        return Game_Board.GAME_TEXT
 
     @staticmethod
     def randomize_mines():

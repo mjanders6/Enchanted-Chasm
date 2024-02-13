@@ -121,10 +121,6 @@ def game_gui():
     head_label = ttk.Label(top_frame, text='The Enchanted Chasm', font=('typewriter', 40), background='grey')
     head_label.place(x = utils.width_prct(25), y=utils.height_prct(10))
 
-    langs = ('Java', 'C#', 'C', 'C++', 'Python',
-             'Go', 'JavaScript', 'PHP', 'Swift')
-    var = tk.Variable(value=langs)
-
     right_frame = Frame(
         root,
         bg='blue',
@@ -138,7 +134,6 @@ def game_gui():
     text = gui_txtbox.create_text_object(location=right_frame)
     text.place(x=5, y=60)
     gui_txtbox.log_capture(text)
-
 
 
 
