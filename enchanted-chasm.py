@@ -54,6 +54,7 @@ import tkinter as tk
 from tkinter import ttk
 from Class.cell import Cell
 from Class.board import Game_Board
+from Class.text_box import gui_txtbox
 from Utilities import settings, utils
 
 file = "GameBoard/TheCave - Copy.txt"
@@ -63,32 +64,32 @@ master_board = Game_Board()
 
 def obstacle_check(object, chk_obj):
     #  Update Cell.MASTER_OBSTACLES to reflect the different relationships
-    lstKeys = list(master_board.MASTER_OBSTACLES.keys())
-    master_board.OBSTACLE_CHECK_LIST.clear()
+    lstKeys = list(Game_Board.MASTER_OBSTACLES.keys())
+    Game_Board.OBSTACLE_CHECK_LIST.clear()
     # Constant for N spaces from obstacle being compared
     k_obs = 2
     # Calculate upper and lower bounds to check if an obstacle is N spaces close
-    r = master_board.MASTER_OBSTACLES[object][0]
-    c = master_board.MASTER_OBSTACLES[object][1]
-    r_l = master_board.MASTER_OBSTACLES[object][0] - k_obs
-    c_l = master_board.MASTER_OBSTACLES[object][1] - k_obs
-    r_upper_bound = master_board.MASTER_OBSTACLES[object][0] + k_obs
-    c_upper_bound = master_board.MASTER_OBSTACLES[object][1] + k_obs
+    r = Game_Board.MASTER_OBSTACLES[object][0]
+    c = Game_Board.MASTER_OBSTACLES[object][1]
+    r_l = Game_Board.MASTER_OBSTACLES[object][0] - k_obs
+    c_l = Game_Board.MASTER_OBSTACLES[object][1] - k_obs
+    r_upper_bound = Game_Board.MASTER_OBSTACLES[object][0] + k_obs
+    c_upper_bound = Game_Board.MASTER_OBSTACLES[object][1] + k_obs
 
     while r_l <= r_upper_bound and r_l != object:
         if r_l < 0 or r_l >= 20:
-            master_board.OBSTACLE_CHECK_LIST.update({'O':[r_l, c]})
+            Game_Board.OBSTACLE_CHECK_LIST.update({'O':[r_l, c]})
         else:
-            master_board.OBSTACLE_CHECK_LIST.update({master_board.MASTER_BOARD[r_l][c]:[r_l,c]})
+            Game_Board.OBSTACLE_CHECK_LIST.update({Game_Board.MASTER_BOARD[r_l][c]:[r_l,c]})
         while c_l <= c_upper_bound and c_l != object:
             if c_l <  0 or c_l >= 20:
-                master_board.OBSTACLE_CHECK_LIST.update({'O': [r, c_l]})
+                Game_Board.OBSTACLE_CHECK_LIST.update({'O': [r, c_l]})
             else:
-                master_board.OBSTACLE_CHECK_LIST.update({master_board.MASTER_BOARD[r][c_l]:[r, c_l]})
+                Game_Board.OBSTACLE_CHECK_LIST.update({Game_Board.MASTER_BOARD[r][c_l]:[r, c_l]})
             c_l += 1
         r_l += 1
 
-    if chk_obj in master_board.OBSTACLE_CHECK_LIST:
+    if chk_obj in Game_Board.OBSTACLE_CHECK_LIST:
         #print(f'Collision detected')
         return 1
     else:
@@ -133,28 +134,13 @@ def game_gui():
     right_frame.place(x=utils.width_prct(75), y=utils.height_prct(25))
     lbl_frame = ttk.Label(right_frame, text='Notes', font=('typewriter', 20), background='blue')
     lbl_frame.place(x=150, y=25)
-    text = Text(right_frame, height=8, width=42)
+
+    text = gui_txtbox.create_text_object(location=right_frame)
     text.place(x=5, y=60)
-    # text.insert('1.0', Game_Board.GAME_TEXT)
+    gui_txtbox.log_capture(text)
 
-    '''
-    from tkinter import *
-from tkinter import ttk
 
-root = Tk()
-log = Text(root, state='disabled', width=80, height=24, wrap='none')
-log.grid()
 
-def writeToLog(msg):
-    numlines = int(log.index('end - 1 line').split('.')[0])
-    log['state'] = 'normal'
-    if numlines==24:
-        log.delete(1.0, 2.0)
-    if log.index('end-1c')!='1.0':
-        log.insert('end', '\n')
-    log.insert('end', msg)
-    log['state'] = 'disabled'
-    '''
 
     center_frame = Frame(
         root,
@@ -184,26 +170,26 @@ def game_start():
 def show_board():
     # for i in Cell.MASTER_BOARD:
     #     print(i)
-    rows = len(master_board.MASTER_BOARD)
+    rows = len(Game_Board.MASTER_BOARD)
     board = []
     i = 0
     while i < rows:
         #
         board.append([])
-        cols = len(master_board.MASTER_BOARD[i])
+        cols = len(Game_Board.MASTER_BOARD[i])
         j = 0
         while j < cols:
-            if (master_board.MASTER_BOARD[i][j] != 'H') :
+            if (Game_Board.MASTER_BOARD[i][j] != 'H') :
                 board[i].append(' ')
             else :
-                board[i].append(master_board.MASTER_BOARD[i][j])
+                board[i].append(Game_Board.MASTER_BOARD[i][j])
             j += 1
         i += 1
     for i in board:
         print(' '.join(i))
 
 def cheat_board():
-    for i in master_board.DEBUG_SPAWN_LOCATIONS:
+    for i in Game_Board.DEBUG_SPAWN_LOCATIONS:
         print(' '.join(i))
 
 def game_mode():
@@ -232,9 +218,9 @@ def game_mode():
 
 def main():
     #game_mode()
-    master_board.init_board(file)
-    master_board.spawn_locations()
-    master_board.button_locations()
+    Game_Board.init_board(file)
+    Game_Board.spawn_locations()
+    Game_Board.button_locations()
     initialize_hero_location()
     cheat_board()
     game_gui()

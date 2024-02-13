@@ -20,12 +20,12 @@ class Game_Board:
     MASTER_OBSTACLES = {}
     OBSTACLE_CHECK_LIST ={}
     GAME_TEXT = {}
-    def __init__(self):
-        """All scores are initially 0."""
+    # def __init__(self):
 
 
-# Initial board
-    def init_board(self, file):
+    # Initial board
+    @staticmethod
+    def init_board(file):
         # file = "GameBoard/TheCave.txt"
         with open(file, 'r') as file:
             # Iterate over each line in the file
