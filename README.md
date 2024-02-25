@@ -3,6 +3,8 @@ Enchanted Chasm: Interactive python game to move your hero through the enchanted
 
 The game has a mine sweeper feel to it with a little twist. 
 
+
+
 # Initial Board
 I have started working on the rest of the GUI and anticipate being done shortly. 
 ![Game Board](/Z_MDImages/game-start.png)

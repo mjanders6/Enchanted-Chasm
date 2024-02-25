@@ -6,10 +6,6 @@ from Class.cell import Cell
 from Class.board import Game_Board
 from Utilities import settings
 
-MASTER_BOARD = []
-all = []
-MASTER_OBSTACLES = {}
-
 class Model:
     def __init__(self):
         self.text_contents = ""
@@ -28,6 +24,7 @@ class View:
         self.controller = controller
 
         # create window for grids
+        root.title('The Enchanted Chasm')
         root.columnconfigure(0, weight=4)
         root.columnconfigure(1, weight=4)
         root.geometry('1300x600+50+50')
@@ -53,14 +50,11 @@ class View:
         # self.text_widget.delete("1.0", tk.END)
         self.text_widget.insert("1.0", new_contents + "\n")
 
-
-
 class Controller:
     def __init__(self, root):
         self.root = root
         self.model = Model()
         self.view = View(root, self)
-        self.cell_btn_object = []
 
     def set_text_contents(self):
         new_contents = 'new text'  # Define the new contents of the Text widget
@@ -68,9 +62,9 @@ class Controller:
         self.view.update_text_contents(new_contents)  # Update the view with the new contents
 
     def button_obj(self, location):
-        Game_Board.btns = [[None] * 20 for _ in range(20)]
-        for i in range(20):
-            for j in range(20):
+        Game_Board.btns = [[None] * settings.GRID_SIZE for _ in range(settings.GRID_SIZE)]
+        for i in range(settings.GRID_SIZE):
+            for j in range(settings.GRID_SIZE):
                 button = Button(location,
                                 width=3,
                                 height=1,
@@ -85,10 +79,9 @@ class Controller:
     def clicked(self, button: Button):
         row = button.grid_info()['row']
         col = button.grid_info()['column']
-        txt = f'({row}, {col})'
         Cell.cell_click(row, col)
-        # print(Game_Board.btns[row][col])
-        self.view.update_text_contents(txt)
+        if Cell.log_obs() != None:
+            self.view.update_text_contents(Cell.log_obs())
 
 
 # Create the root window

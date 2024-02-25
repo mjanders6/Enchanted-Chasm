@@ -8,7 +8,6 @@ Buttons/Cells
 from tkinter import Button, messagebox
 from tkinter import *
 import sys
-import random
 from functools import partial
 from Class.board import Game_Board
 
@@ -79,7 +78,7 @@ class Cell():
             Game_Board.MASTER_BOARD[h_cur[0]][h_cur[1]] = '*'
             Game_Board.MASTER_OBSTACLES['H'] = (row, col)
             Game_Board.MASTER_BOARD[row][col] = 'H'
-            # self.status = 'H'
+
             Cell.set_players()
 
         if Game_Board.btns[row][col]['state'] == 'normal' and Game_Board.MASTER_BOARD[row][col] == 'M':
@@ -153,7 +152,7 @@ class Cell():
 
     @staticmethod
     def you_win():
-        messagebox.showinfo(title='You Win!', message='You have found the treasure!\nYou have mastered this level!\n :-) your amazing')
+        messagebox.showinfo(title='You Win!', message='You have found the treasure! Level mastered!\n :-) your amazing')
         sys.exit()
 
 
@@ -172,10 +171,47 @@ class Cell():
             (h[0] + 1, h[1]),
             (h[0], h[1] + 1)
         ]
-
         cells = [cell for cell in cells if cell is not None]
+
+        # for (row, col) in cells:
+
         return cells
 
+    @staticmethod
+    def m_obs():
+        h = Game_Board.MASTER_OBSTACLES['H']
+        cells = [
+            Game_Board.MASTER_BTN_BOARD[(h[0] - 2, h[1])],
+            Game_Board.MASTER_BTN_BOARD[(h[0], h[1] - 2)],
+            Game_Board.MASTER_BTN_BOARD[(h[0] + 2, h[1])],
+            Game_Board.MASTER_BTN_BOARD[(h[0], h[1] + 2)]
+        ]
+        cells = [cell for cell in cells if cell is not None]
+
+        if 'M' in cells:
+            return 'You are close to a monster'
+
+    @staticmethod
+    def p_obs():
+        h = Game_Board.MASTER_OBSTACLES['H']
+        cells = [
+            Game_Board.MASTER_BTN_BOARD[(h[0] - 1, h[1])],
+            Game_Board.MASTER_BTN_BOARD[(h[0], h[1] - 1)],
+            Game_Board.MASTER_BTN_BOARD[(h[0] + 1, h[1])],
+            Game_Board.MASTER_BTN_BOARD[(h[0], h[1] + 1)]
+        ]
+        cells = [cell for cell in cells if cell is not None]
+
+        if 'P' in cells:
+            return 'You are close to the Pit'
+
+    @classmethod
+    def log_obs(cls):
+        if cls.p_obs() != None:
+            return cls.p_obs()
+
+        if cls.m_obs() != None:
+            return cls.m_obs()
 
     def __repr__(self):
         return f"Cell({self.x}, {self.y})"
