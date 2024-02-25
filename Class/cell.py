@@ -97,13 +97,13 @@ class Cell():
     def show_monster(row, col):
         Game_Board.btns[row][col].configure(bg='red')
         Game_Board.btns[row][col].configure(text='M')
-        Cell.game_over()
+        Cell.game_over_monster()
 
     @staticmethod
     def show_pit(row, col):
         Game_Board.btns[row][col].configure(bg='red')
         Game_Board.btns[row][col].configure(text='P')
-        Cell.game_over()
+        Cell.game_over_pit()
 
     @staticmethod
     def show_treasure(row, col):
@@ -113,7 +113,6 @@ class Cell():
 
     @staticmethod
     def show_wall(row, col):
-        Game_Board.action_call('You hit a wall')
         Game_Board.btns[row][col].configure(bg='brown')
         Game_Board.btns[row][col].configure(state='disabled')
         Game_Board.btns[row][col].configure(text='W')
@@ -146,8 +145,13 @@ class Cell():
                         Game_Board.btns[row][col].configure(text=Game_Board.MASTER_BOARD[i][j])
 
     @staticmethod
-    def game_over():
-        messagebox.showinfo(title='Monster Killed You!', message='You have found the monster! You are now dead!\n :-( so sad')
+    def game_over_monster():
+        messagebox.showinfo(title='The Monster Killed You!', message='You have found the monster! You are now dead!\n :-( so sad')
+        sys.exit()
+
+    @staticmethod
+    def game_over_pit():
+        messagebox.showinfo(title='You fell in the Pit!', message='You have found the Pit! You are now dead!\n :-( so sad')
         sys.exit()
 
     @staticmethod
