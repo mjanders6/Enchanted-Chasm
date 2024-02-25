@@ -5,14 +5,10 @@ The game has a mine sweeper feel to it with a little twist.
 
 
 
-# Initial Board
-I have started working on the rest of the GUI and anticipate being done shortly. 
-![Game Board](/Z_MDImages/game-start.png)
+# Keeps a log of how close the hero gets to the monster, pit, and treasure
+![Game Board](/Z_MDImages/monster-log.png)
+![Game Board](/Z_MDImages/monster-hit.png)
+![Game Board](/Z_MDImages/pit-log.png)
 
-
-# End State
-When you find the monster game is over!
-![Game Board](/Z_MDImages/game-over.png)
-
-You could be a winner!
-![Game Board](/Z_MDImages/win.png)
+# Treasure found!
+![Game Board](/Z_MDImages/t-found.png)
