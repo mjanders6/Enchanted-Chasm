@@ -107,6 +107,7 @@ class Cell():
     def show_treasure(self):
         self.cell_btn_object.configure(bg='green')
         self.cell_btn_object.configure(text=self.status)
+        Cell.you_win()
 
     def show_wall(self):
         Game_Board.action_call('You hit a wall')
@@ -171,19 +172,13 @@ class Cell():
     @staticmethod
     def game_over():
         messagebox.showinfo(title='Monster Killed You!', message='You have found the monster! You are now dead!\n :-( so sad')
-
         sys.exit()
-        # for cells in Cell.all:
-        #     row = len(Game_Board.MASTER_BOARD)
-        #     i = 0
-        #     while i < row:
-        #         j = 0
-        #         col = len(Game_Board.MASTER_BOARD[i])
-        #         while j < col:
-        #             if (cells.x, cells.y) == (i, j):
-        #                 cells.cell_btn_object.configure(state='disabled')
-        #             j += 1
-        #         i += 1
+
+    @staticmethod
+    def you_win():
+        messagebox.showinfo(title='You Win!', message='You have found the treasure!\nYou have mastered this level!\n :-) your amazing')
+        sys.exit()
+
 
     def get_cell_by_axis(self, x, y):
         # Return a cell object based on the value of x,y
