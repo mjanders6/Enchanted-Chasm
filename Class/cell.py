@@ -83,53 +83,41 @@ class Cell():
             Cell.set_players()
 
         if Game_Board.btns[row][col]['state'] == 'normal' and Game_Board.MASTER_BOARD[row][col] == 'M':
-            Game_Board.btns[row][col]['text'] = 'M'
-            Cell.set_players()
+            Cell.show_monster(row, col)
 
-    def left_click_actions(self, event):
-        print(self.__dict__)
-        h_cur = Game_Board.MASTER_OBSTACLES['H']
-        # works, just need to be able
-        # to upate board and update previous H
-        if self.status == 'E' and self.cell_btn_object['state'] == 'normal':
-            Game_Board.MASTER_BOARD[h_cur[0]][h_cur[1]] = '*'
-            Game_Board.MASTER_OBSTACLES['H'] = (self.x, self.y)
-            Game_Board.MASTER_BOARD[self.x][self.y] = 'H'
-            self.status = 'H'
-            Cell.set_players()
+        if Game_Board.btns[row][col]['state'] == 'normal' and Game_Board.MASTER_BOARD[row][col] == 'P':
+            Cell.show_pit(row, col)
 
-        if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status == 'M':
-            self.show_monster()
+        if Game_Board.btns[row][col]['state'] == 'normal' and Game_Board.MASTER_BOARD[row][col] == 'T':
+            Cell.show_treasure(row, col)
 
-        if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status == 'T':
-            self.show_treasure()
+        if Game_Board.btns[row][col]['state'] == 'normal' and Game_Board.MASTER_BOARD[row][col] == 'W':
+            Cell.show_wall(row, col)
 
-        if self.cell_btn_object['state'] == 'normal' and self.status != 'H' and self.status == 'W':
-            self.show_wall()
-
-        Cell.set_players()
-
-
-    def show_monster(self):
-        self.cell_btn_object.configure(bg='red')
-        self.cell_btn_object.configure(text=self.status)
+    @staticmethod
+    def show_monster(row, col):
+        Game_Board.btns[row][col].configure(bg='red')
+        Game_Board.btns[row][col].configure(text='M')
         Cell.game_over()
 
-    def show_pit(self):
-        self.cell_btn_object.configure(bg='red')
-        self.cell_btn_object.configure(text=self.status)
+    @staticmethod
+    def show_pit(row, col):
+        Game_Board.btns[row][col].configure(bg='red')
+        Game_Board.btns[row][col].configure(text='P')
         Cell.game_over()
 
-    def show_treasure(self):
-        self.cell_btn_object.configure(bg='green')
-        self.cell_btn_object.configure(text=self.status)
+    @staticmethod
+    def show_treasure(row, col):
+        Game_Board.btns[row][col].configure(bg='green')
+        Game_Board.btns[row][col].configure(text='T')
         Cell.you_win()
 
-    def show_wall(self):
+    @staticmethod
+    def show_wall(row, col):
         Game_Board.action_call('You hit a wall')
-        self.cell_btn_object.configure(bg='brown')
-        self.cell_btn_object.configure(state='disabled')
-        self.cell_btn_object.configure(text=self.status)
+        Game_Board.btns[row][col].configure(bg='brown')
+        Game_Board.btns[row][col].configure(state='disabled')
+        Game_Board.btns[row][col].configure(text='W')
 
     def show_cell(self):
         if not self.is_opened:
@@ -157,11 +145,6 @@ class Cell():
                     if Game_Board.MASTER_BOARD[i][j] == '*':
                         Game_Board.btns[row][col].configure(state='normal')
                         Game_Board.btns[row][col].configure(text=Game_Board.MASTER_BOARD[i][j])
-
-    @staticmethod
-    def print_tex():
-        l = ['list 1', 'list 2']
-        return l
 
     @staticmethod
     def game_over():

@@ -67,23 +67,6 @@ class Controller:
         self.model.set_text_contents(new_contents)  # Update the model with the new contents
         self.view.update_text_contents(new_contents)  # Update the view with the new contents
 
-
-
-    # def button_obj(self, location):
-    #     global all
-    #     for number, (col, row) in enumerate(product(range(20), range(20))):
-    #         button = Button(location,
-    #                         width=3,
-    #                         height=1,
-    #                         state="normal",
-    #                         text=''
-    #                         )
-    #         # callback, which also submits the button innstance to the function
-    #         button["command"] = partial(self.clicked, button)
-    #         button.grid(row=row, column=col)
-    #         Game_Board.btns.append(button)
-    #         Game_Board.btns[row][col] = button
-
     def button_obj(self, location):
         Game_Board.btns = [[None] * 20 for _ in range(20)]
         for i in range(20):
@@ -98,15 +81,6 @@ class Controller:
                 button["command"] = partial(self.clicked, button)
                 button.grid(row=i, column=j)
                 Game_Board.btns[i][j] = button
-
-    # def button_obj(self, location):
-    #     for x in range(settings.GRID_SIZE):
-    #         for y in range(settings.GRID_SIZE):
-    #             c1 = Cell(x, y)
-    #             c1.create_btn_object(location)
-    #             c1.cell_btn_object.grid(
-    #                 column=y, row=x
-    #             )
 
     def clicked(self, button: Button):
         row = button.grid_info()['row']
