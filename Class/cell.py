@@ -70,6 +70,21 @@ class Cell():
 
         Cell.set_players()
 
+    @staticmethod
+    def cell_click(row, col):
+        h_cur = Game_Board.MASTER_OBSTACLES['H']
+        # works, just need to be able
+        # to upate board and update previous H
+        if Game_Board.MASTER_BTN_BOARD[(row, col)] == 'E' and Game_Board.btns[row][col]['state'] == 'normal':
+            Game_Board.MASTER_BOARD[h_cur[0]][h_cur[1]] = '*'
+            Game_Board.MASTER_OBSTACLES['H'] = (row, col)
+            Game_Board.MASTER_BOARD[row][col] = 'H'
+            # self.status = 'H'
+            Cell.set_players()
+
+        if Game_Board.btns[row][col]['state'] == 'normal' and Game_Board.MASTER_BOARD[row][col] == 'M':
+            Game_Board.btns[row][col]['text'] = 'M'
+            Cell.set_players()
 
     def left_click_actions(self, event):
         print(self.__dict__)
@@ -93,6 +108,7 @@ class Cell():
             self.show_wall()
 
         Cell.set_players()
+
 
     def show_monster(self):
         self.cell_btn_object.configure(bg='red')
@@ -126,43 +142,21 @@ class Cell():
         self.is_opened = True
 
     @staticmethod
-    def randomize_mines():
-        picked_cells = random.sample(
-            Cell.all, settings.MINES_COUNT
-        )
-        for picked_cells in picked_cells:
-            picked_cells.is_mine = True
-            print(picked_cells)
-
-    @staticmethod
     def set_players(): # refactor to make everything rely on the Game_Boar. Replace
-        for cells in Cell.all:
-            row = len(Game_Board.MASTER_BOARD)
-            i = 0
-            while i < row:
-                j = 0
-                col = len(Game_Board.MASTER_BOARD[i])
-                while j < col:
-                    if (cells.x, cells.y) == (i, j):
-                        cells.status = Game_Board.MASTER_BOARD[i][j]
-                        # cells.cell_btn_object.configure(state='disabled')
-                        if Game_Board.MASTER_BOARD[i][j] == 'H':
-                            cells.is_mine = False
-                            cells.cell_btn_object.configure(text=Game_Board.MASTER_BOARD[i][j])
-                            for k in cells.surrounded_cells:
-                                k.cell_btn_object.configure(state='normal')
-                                k.is_mine = True
-                        if Game_Board.MASTER_BOARD[i][j] == '*':
-                            cells.is_last_move = True
-                            cells.is_mine = False
-                            cells.cell_btn_object.configure(state='normal')
-                            cells.cell_btn_object.configure(text=Game_Board.MASTER_BOARD[i][j])
-                        # if Game_Board.MASTER_BOARD[i][j] == 'T' or Game_Board.MASTER_BOARD[i][j] == 'M' or Game_Board.MASTER_BOARD[i][j] == 'P':
-                        #     cells.is_mine = True
-                        #     cells.cell_btn_object.configure(state='normal')
-
-                    j += 1
-                i += 1
+        for i in range(len(Game_Board.btns)):
+            for j in range(len(Game_Board.btns[i])):
+                row = Game_Board.btns[i][j].grid_info()['row']
+                col = Game_Board.btns[i][j].grid_info()['column']
+                if (row, col) == (i, j):
+                    # cells.status = Game_Board.MASTER_BOARD[i][j]
+                    # cells.cell_btn_object.configure(state='disabled')
+                    if Game_Board.MASTER_BOARD[i][j] == 'H':
+                        Game_Board.btns[i][j].configure(text=Game_Board.MASTER_BOARD[i][j])
+                        for (row, col) in Cell.surrounded_cells():
+                            Game_Board.btns[row][col].configure(state='normal')
+                    if Game_Board.MASTER_BOARD[i][j] == '*':
+                        Game_Board.btns[row][col].configure(state='normal')
+                        Game_Board.btns[row][col].configure(text=Game_Board.MASTER_BOARD[i][j])
 
     @staticmethod
     def print_tex():
@@ -180,23 +174,25 @@ class Cell():
         sys.exit()
 
 
-    def get_cell_by_axis(self, x, y):
+    def get_cell_by_axis(self):
         # Return a cell object based on the value of x,y
         for cell in Cell.all:
             if cell.x == x and cell.y == y:
                 return cell
 
-    @property
-    def surrounded_cells(self):
+    @staticmethod
+    def surrounded_cells():
+        h = Game_Board.MASTER_OBSTACLES['H']
         cells = [
-            self.get_cell_by_axis(self.x - 1, self.y),
-            self.get_cell_by_axis(self.x, self.y - 1),
-            self.get_cell_by_axis(self.x + 1, self.y),
-            self.get_cell_by_axis(self.x, self.y + 1)
+            (h[0] - 1, h[1]),
+            (h[0], h[1] - 1),
+            (h[0] + 1, h[1]),
+            (h[0], h[1] + 1)
         ]
 
         cells = [cell for cell in cells if cell is not None]
         return cells
+
 
     def __repr__(self):
         return f"Cell({self.x}, {self.y})"
