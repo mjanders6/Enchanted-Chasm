@@ -9,10 +9,12 @@ from tkinter import Button, messagebox
 from tkinter import *
 import sys
 import random
+from functools import partial
 from Class.board import Game_Board
+
 from Utilities import settings
 
-class Cell:
+class Cell():
     all = []
     all2 = []
     cell_count = settings.CELL_COUNT
@@ -27,6 +29,7 @@ class Cell:
         self.status = ''
         self.x = x
         self.y = y
+        self.text_contents = ""
         # Append the object to the Cell.all list
         Cell.all.append(self)
 
@@ -38,13 +41,38 @@ class Cell:
             state="disabled",
             text= ''
         )
-        btn.bind('<Button-1>', self.left_click_actions ) # left click
-        btn.bind('<Button-3>', self.right_click_actions) # right click
-        # btn.bind('<Button-3>', self.log, add='+')  # right click
+        # btn.bind('<Button-1>', self.left_click_actions ) # left click
+        btn["command"] = partial(self.clicked, btn)
         self.cell_btn_object = btn
 
+    def clicked(self, button: Button):
+        h_cur = Game_Board.MASTER_OBSTACLES['H']
+        # works, just need to be able
+        # to upate board and update previous H
+        if self.status == 'E' and self.cell_btn_object['state'] == 'normal':
+            Game_Board.MASTER_BOARD[h_cur[0]][h_cur[1]] = '*'
+            Game_Board.MASTER_OBSTACLES['H'] = (self.x, self.y)
+            Game_Board.MASTER_BOARD[self.x][self.y] = 'H'
+            self.status = 'H'
+            Cell.set_players()
+
+        if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status == 'M':
+            self.show_monster()
+
+        if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status == 'P':
+            self.show_pit()
+
+        if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status == 'T':
+            self.show_treasure()
+
+        if self.cell_btn_object['state'] == 'normal' and self.status != 'H' and self.status == 'W':
+            self.show_wall()
+
+        Cell.set_players()
+
+
     def left_click_actions(self, event):
-        print(f'({self.x}, {self.y})')
+        print(self.__dict__)
         h_cur = Game_Board.MASTER_OBSTACLES['H']
         # works, just need to be able
         # to upate board and update previous H
@@ -71,11 +99,17 @@ class Cell:
         self.cell_btn_object.configure(text=self.status)
         Cell.game_over()
 
+    def show_pit(self):
+        self.cell_btn_object.configure(bg='red')
+        self.cell_btn_object.configure(text=self.status)
+        Cell.game_over()
+
     def show_treasure(self):
         self.cell_btn_object.configure(bg='green')
         self.cell_btn_object.configure(text=self.status)
 
     def show_wall(self):
+        Game_Board.action_call('You hit a wall')
         self.cell_btn_object.configure(bg='brown')
         self.cell_btn_object.configure(state='disabled')
         self.cell_btn_object.configure(text=self.status)
@@ -90,11 +124,6 @@ class Cell:
             # Mark the cell as opened (Use is as the last line of this method)
         self.is_opened = True
 
-    def right_click_actions(self, event):
-        Cell.click += 1
-        Game_Board.GAME_TEXT[Cell.click] = f'({self.x}, {self.y})'
-        return Game_Board.GAME_TEXT
-
     @staticmethod
     def randomize_mines():
         picked_cells = random.sample(
@@ -105,7 +134,7 @@ class Cell:
             print(picked_cells)
 
     @staticmethod
-    def set_players():
+    def set_players(): # refactor to make everything rely on the Game_Boar. Replace
         for cells in Cell.all:
             row = len(Game_Board.MASTER_BOARD)
             i = 0

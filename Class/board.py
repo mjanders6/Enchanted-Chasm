@@ -9,6 +9,7 @@ Game board Class
 '''
 import random
 from tkinter import *
+import tkinter as tk
 from Utilities import settings, utils
 
 class Game_Board:
@@ -19,7 +20,9 @@ class Game_Board:
     OBSTACLE_LOCATIONS = []
     MASTER_OBSTACLES = {}
     OBSTACLE_CHECK_LIST ={}
-    GAME_TEXT = {}
+    GAME_TEXT = ''
+    btns = []
+    surrounded_cells = []
     # def __init__(self):
 
 
@@ -48,6 +51,10 @@ class Game_Board:
                 Game_Board.MASTER_BTN_BOARD.update({(i, j) : Game_Board.MASTER_BOARD[i][j]})
                 j += 1
             i += 1
+
+    @staticmethod
+    def get_h():
+        return Game_Board.MASTER_OBSTACLES['H']
 
 # Read the current board
     @staticmethod
@@ -144,6 +151,22 @@ class Game_Board:
         Game_Board.MASTER_OBSTACLES.update({object: (ran_row, ran_col)})
         Game_Board.MASTER_BOARD[ran_row][ran_col] = object
 
+        Game_Board.surrounded_cells = [
+            (ran_row - 1, ran_col),
+            (ran_row, ran_col - 1),
+            (ran_row + 1, ran_col),
+            (ran_row, ran_col + 1)
+        ]
+
         Game_Board.obstacle_locations()
         Game_Board.debug_spawn_locations()
         Game_Board.spawn_locations()
+
+    @staticmethod
+    def action_call(text):
+        Game_Board.GAME_TEXT = text
+
+    @staticmethod
+    def get_game_text(text):
+        value = Game_Board.GAME_TEXT
+        return text.insert(tk.INSERT, f'{value}' + '\n')

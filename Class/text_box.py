@@ -3,8 +3,7 @@ from tkinter import *
 import tkinter as tk
 from tkinter import ttk
 from Class.board import Game_Board
-from Class.cell import Cell
-from Utilities import settings
+
 
 
 class gui_txtbox(ttk.Frame):
@@ -14,11 +13,14 @@ class gui_txtbox(ttk.Frame):
 
     @staticmethod
     def create_text_object(location):
-        return Text(location, height=8, width=42)
+        tb = Text(location, height=8, width=42)
+        tb.place(x=5, y=60)
+        tb.insert(tk.INSERT, f'This is the game log:' + '\n')
+        Game_Board.get_game_text(tb)
 
     @staticmethod
     def log_capture(text):
         text.insert(tk.INSERT, f'This is the game log:' + '\n')
-        for index, value in Game_Board.GAME_TEXT.items():
-            text.insert(tk.INSERT, f'{value}' + '\n')
+        value = Game_Board.get_game_text()
+        text.insert(tk.INSERT, f'{value}' + '\n')
 
