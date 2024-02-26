@@ -159,3 +159,4 @@ class Game_Board:
     def get_game_text(text):
         value = Game_Board.GAME_TEXT
         return text.insert(tk.INSERT, f'{value}' + '\n')
+
