@@ -196,6 +196,20 @@ class Cell():
             return 'You are close to a monster'
 
     @staticmethod
+    def m_obs_to_close():
+        h = Game_Board.MASTER_OBSTACLES['H']
+        cells = [
+            Game_Board.MASTER_BTN_BOARD[(h[0] - 1, h[1])],
+            Game_Board.MASTER_BTN_BOARD[(h[0], h[1] - 1)],
+            Game_Board.MASTER_BTN_BOARD[(h[0] + 1, h[1])],
+            Game_Board.MASTER_BTN_BOARD[(h[0], h[1] + 1)]
+        ]
+        cells = [cell for cell in cells if cell is not None]
+
+        if 'M' in cells:
+            return 'You are way to close to a monster! Proceed with caution!'
+
+    @staticmethod
     def p_obs():
         h = Game_Board.MASTER_OBSTACLES['H']
         cells = [
@@ -213,6 +227,9 @@ class Cell():
     def log_obs(cls):
         if cls.p_obs() != None:
             return cls.p_obs()
+
+        if cls.m_obs_to_close() != None:
+            return cls.m_obs_to_close()
 
         if cls.m_obs() != None:
             return cls.m_obs()
