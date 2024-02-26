@@ -44,6 +44,7 @@ class View:
         # Create a Text widget
         self.text_widget = tk.Text(root)
         self.text_widget.grid(column=1, row=1, sticky=tk.NE)
+        self.text_widget.insert("1.0", 'Lets get ready to rumble!\nStart selecting buttons to find your treasure!' + "\n")
 
     def update_text_contents(self, new_contents):
         # Update the Text widget with the new text contents
@@ -83,7 +84,6 @@ class Controller:
         if Cell.log_obs() != None:
             self.view.update_text_contents(Cell.log_obs())
 
-
 # Create the root window
 root = tk.Tk()
 
@@ -91,6 +91,7 @@ root = tk.Tk()
 controller = Controller(root)
 
 Cell.set_players()
+
 
 # Start the Tkinter event loop
 root.mainloop()
