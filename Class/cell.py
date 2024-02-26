@@ -8,11 +8,12 @@ Buttons/Cells
 from tkinter import Button, messagebox
 from tkinter import *
 import sys
-import random
+from functools import partial
 from Class.board import Game_Board
+
 from Utilities import settings
 
-class Cell:
+class Cell():
     all = []
     all2 = []
     cell_count = settings.CELL_COUNT
@@ -27,6 +28,7 @@ class Cell:
         self.status = ''
         self.x = x
         self.y = y
+        self.text_contents = ""
         # Append the object to the Cell.all list
         Cell.all.append(self)
 
@@ -38,13 +40,11 @@ class Cell:
             state="disabled",
             text= ''
         )
-        btn.bind('<Button-1>', self.left_click_actions ) # left click
-        btn.bind('<Button-3>', self.right_click_actions) # right click
-        # btn.bind('<Button-3>', self.log, add='+')  # right click
+        # btn.bind('<Button-1>', self.left_click_actions ) # left click
+        btn["command"] = partial(self.clicked, btn)
         self.cell_btn_object = btn
 
-    def left_click_actions(self, event):
-        print(f'({self.x}, {self.y})')
+    def clicked(self, button: Button):
         h_cur = Game_Board.MASTER_OBSTACLES['H']
         # works, just need to be able
         # to upate board and update previous H
@@ -58,6 +58,9 @@ class Cell:
         if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status == 'M':
             self.show_monster()
 
+        if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status == 'P':
+            self.show_pit()
+
         if self.is_mine and self.cell_btn_object['state'] == 'normal' and self.status == 'T':
             self.show_treasure()
 
@@ -66,19 +69,53 @@ class Cell:
 
         Cell.set_players()
 
-    def show_monster(self):
-        self.cell_btn_object.configure(bg='red')
-        self.cell_btn_object.configure(text=self.status)
-        Cell.game_over()
+    @staticmethod
+    def cell_click(row, col):
+        h_cur = Game_Board.MASTER_OBSTACLES['H']
+        # works, just need to be able
+        # to upate board and update previous H
+        if Game_Board.MASTER_BTN_BOARD[(row, col)] == 'E' and Game_Board.btns[row][col]['state'] == 'normal':
+            Game_Board.MASTER_BOARD[h_cur[0]][h_cur[1]] = '*'
+            Game_Board.MASTER_OBSTACLES['H'] = (row, col)
+            Game_Board.MASTER_BOARD[row][col] = 'H'
 
-    def show_treasure(self):
-        self.cell_btn_object.configure(bg='green')
-        self.cell_btn_object.configure(text=self.status)
+            Cell.set_players()
 
-    def show_wall(self):
-        self.cell_btn_object.configure(bg='brown')
-        self.cell_btn_object.configure(state='disabled')
-        self.cell_btn_object.configure(text=self.status)
+        if Game_Board.btns[row][col]['state'] == 'normal' and Game_Board.MASTER_BOARD[row][col] == 'M':
+            Cell.show_monster(row, col)
+
+        if Game_Board.btns[row][col]['state'] == 'normal' and Game_Board.MASTER_BOARD[row][col] == 'P':
+            Cell.show_pit(row, col)
+
+        if Game_Board.btns[row][col]['state'] == 'normal' and Game_Board.MASTER_BOARD[row][col] == 'T':
+            Cell.show_treasure(row, col)
+
+        if Game_Board.btns[row][col]['state'] == 'normal' and Game_Board.MASTER_BOARD[row][col] == 'W':
+            Cell.show_wall(row, col)
+
+    @staticmethod
+    def show_monster(row, col):
+        Game_Board.btns[row][col].configure(bg='red')
+        Game_Board.btns[row][col].configure(text='M')
+        Cell.game_over_monster()
+
+    @staticmethod
+    def show_pit(row, col):
+        Game_Board.btns[row][col].configure(bg='red')
+        Game_Board.btns[row][col].configure(text='P')
+        Cell.game_over_pit()
+
+    @staticmethod
+    def show_treasure(row, col):
+        Game_Board.btns[row][col].configure(bg='green')
+        Game_Board.btns[row][col].configure(text='T')
+        Cell.you_win()
+
+    @staticmethod
+    def show_wall(row, col):
+        Game_Board.btns[row][col].configure(bg='brown')
+        Game_Board.btns[row][col].configure(state='disabled')
+        Game_Board.btns[row][col].configure(text='W')
 
     def show_cell(self):
         if not self.is_opened:
@@ -90,89 +127,95 @@ class Cell:
             # Mark the cell as opened (Use is as the last line of this method)
         self.is_opened = True
 
-    def right_click_actions(self, event):
-        Cell.click += 1
-        Game_Board.GAME_TEXT[Cell.click] = f'({self.x}, {self.y})'
-        return Game_Board.GAME_TEXT
+    @staticmethod
+    def set_players(): # refactor to make everything rely on the Game_Boar. Replace
+        for i in range(len(Game_Board.btns)):
+            for j in range(len(Game_Board.btns[i])):
+                row = Game_Board.btns[i][j].grid_info()['row']
+                col = Game_Board.btns[i][j].grid_info()['column']
+                if (row, col) == (i, j):
+                    # cells.status = Game_Board.MASTER_BOARD[i][j]
+                    # cells.cell_btn_object.configure(state='disabled')
+                    if Game_Board.MASTER_BOARD[i][j] == 'H':
+                        Game_Board.btns[i][j].configure(text=Game_Board.MASTER_BOARD[i][j])
+                        for (row, col) in Cell.surrounded_cells():
+                            Game_Board.btns[row][col].configure(state='normal')
+                    if Game_Board.MASTER_BOARD[i][j] == '*':
+                        Game_Board.btns[row][col].configure(state='normal')
+                        Game_Board.btns[row][col].configure(text=Game_Board.MASTER_BOARD[i][j])
 
     @staticmethod
-    def randomize_mines():
-        picked_cells = random.sample(
-            Cell.all, settings.MINES_COUNT
-        )
-        for picked_cells in picked_cells:
-            picked_cells.is_mine = True
-            print(picked_cells)
-
-    @staticmethod
-    def set_players():
-        for cells in Cell.all:
-            row = len(Game_Board.MASTER_BOARD)
-            i = 0
-            while i < row:
-                j = 0
-                col = len(Game_Board.MASTER_BOARD[i])
-                while j < col:
-                    if (cells.x, cells.y) == (i, j):
-                        cells.status = Game_Board.MASTER_BOARD[i][j]
-                        # cells.cell_btn_object.configure(state='disabled')
-                        if Game_Board.MASTER_BOARD[i][j] == 'H':
-                            cells.is_mine = False
-                            cells.cell_btn_object.configure(text=Game_Board.MASTER_BOARD[i][j])
-                            for k in cells.surrounded_cells:
-                                k.cell_btn_object.configure(state='normal')
-                                k.is_mine = True
-                        if Game_Board.MASTER_BOARD[i][j] == '*':
-                            cells.is_last_move = True
-                            cells.is_mine = False
-                            cells.cell_btn_object.configure(state='normal')
-                            cells.cell_btn_object.configure(text=Game_Board.MASTER_BOARD[i][j])
-                        # if Game_Board.MASTER_BOARD[i][j] == 'T' or Game_Board.MASTER_BOARD[i][j] == 'M' or Game_Board.MASTER_BOARD[i][j] == 'P':
-                        #     cells.is_mine = True
-                        #     cells.cell_btn_object.configure(state='normal')
-
-                    j += 1
-                i += 1
-
-    @staticmethod
-    def print_tex():
-        l = ['list 1', 'list 2']
-        return l
-
-    @staticmethod
-    def game_over():
-        messagebox.showinfo(title='Monster Killed You!', message='You have found the monster! You are now dead!\n :-( so sad')
-
+    def game_over_monster():
+        messagebox.showinfo(title='The Monster Killed You!', message='You have found the monster! You are now dead!\n :-( so sad')
         sys.exit()
-        # for cells in Cell.all:
-        #     row = len(Game_Board.MASTER_BOARD)
-        #     i = 0
-        #     while i < row:
-        #         j = 0
-        #         col = len(Game_Board.MASTER_BOARD[i])
-        #         while j < col:
-        #             if (cells.x, cells.y) == (i, j):
-        #                 cells.cell_btn_object.configure(state='disabled')
-        #             j += 1
-        #         i += 1
 
-    def get_cell_by_axis(self, x, y):
+    @staticmethod
+    def game_over_pit():
+        messagebox.showinfo(title='You fell in the Pit!', message='You have found the Pit! You are now dead!\n :-( so sad')
+        sys.exit()
+
+    @staticmethod
+    def you_win():
+        messagebox.showinfo(title='You Win!', message='You have found the treasure! Level mastered!\n :-) your amazing')
+        sys.exit()
+
+
+    def get_cell_by_axis(self):
         # Return a cell object based on the value of x,y
         for cell in Cell.all:
             if cell.x == x and cell.y == y:
                 return cell
 
-    @property
-    def surrounded_cells(self):
+    @staticmethod
+    def surrounded_cells():
+        h = Game_Board.MASTER_OBSTACLES['H']
         cells = [
-            self.get_cell_by_axis(self.x - 1, self.y),
-            self.get_cell_by_axis(self.x, self.y - 1),
-            self.get_cell_by_axis(self.x + 1, self.y),
-            self.get_cell_by_axis(self.x, self.y + 1)
+            (h[0] - 1, h[1]),
+            (h[0], h[1] - 1),
+            (h[0] + 1, h[1]),
+            (h[0], h[1] + 1)
         ]
-
         cells = [cell for cell in cells if cell is not None]
+
+        # for (row, col) in cells:
+
         return cells
+
+    @staticmethod
+    def m_obs():
+        h = Game_Board.MASTER_OBSTACLES['H']
+        cells = [
+            Game_Board.MASTER_BTN_BOARD[(h[0] - 2, h[1])],
+            Game_Board.MASTER_BTN_BOARD[(h[0], h[1] - 2)],
+            Game_Board.MASTER_BTN_BOARD[(h[0] + 2, h[1])],
+            Game_Board.MASTER_BTN_BOARD[(h[0], h[1] + 2)]
+        ]
+        cells = [cell for cell in cells if cell is not None]
+
+        if 'M' in cells:
+            return 'You are close to a monster'
+
+    @staticmethod
+    def p_obs():
+        h = Game_Board.MASTER_OBSTACLES['H']
+        cells = [
+            Game_Board.MASTER_BTN_BOARD[(h[0] - 1, h[1])],
+            Game_Board.MASTER_BTN_BOARD[(h[0], h[1] - 1)],
+            Game_Board.MASTER_BTN_BOARD[(h[0] + 1, h[1])],
+            Game_Board.MASTER_BTN_BOARD[(h[0], h[1] + 1)]
+        ]
+        cells = [cell for cell in cells if cell is not None]
+
+        if 'P' in cells:
+            return 'You are close to the Pit'
+
+    @classmethod
+    def log_obs(cls):
+        if cls.p_obs() != None:
+            return cls.p_obs()
+
+        if cls.m_obs() != None:
+            return cls.m_obs()
 
     def __repr__(self):
         return f"Cell({self.x}, {self.y})"

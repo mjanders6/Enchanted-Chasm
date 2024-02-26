@@ -1,0 +1,7 @@
+{
+	"MASTER_BOARD": [],
+	"MASTER_OBSTACLES": {"H":(), "T":(), "M":(), "P":()},
+	"SPAWN_LOCATIONS": [],
+	"MASTER_BTN_LOCATIONS": {},
+	"GAME_MODEL": []	
+}
