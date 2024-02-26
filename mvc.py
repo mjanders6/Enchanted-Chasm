@@ -13,7 +13,7 @@ class Model:
     def set_text_contents(self, new_contents):
         self.text_contents = new_contents
 
-    Game_Board.init_board('TheCave.txt')
+    Game_Board.init_board('GameBoard/TheCave.txt')
     Game_Board.obstacle_locations()
     Game_Board.spawn_object('H')
     Game_Board.button_locations()
