@@ -1,6 +1,46 @@
+'''
+Program Name: mvc.py
+Github Repository: https://github.com/mjanders6/Enchanted-Chasm
+Author: Michael J. Anderson
+Date: 26Feb2024
+
+
+Purpose:
+Build an Enchanted Cave complete with one Pit, Monster, and Treasure with a randomly placed Hero.
+
+
+Customer Requirements:
+The Cave (20x20 squares) must contain the following: Hero, Walls, Pit, Monster, and Treasure
+- The Monster must not be placed within three(3) squares of the Treasure and Pit
+- The Pit must not be placed within two(2) squares from the Treasure
+- The Hero must not be placed a.) within three(3) squares from the Monster and b.) within two(2) squares from the Pit and Treasure
+- Hero, Treasure, Pit, and Monster cannot be placed within a Wall
+
+
+Pseudo Code
+    Read in the board from a text file
+    Create a list of locations on where the walls are
+    Define obstacle locations within a dictionary
+        compare dictionary values to ensure
+            Nothing is within a wall
+            The Monster must not be placed within three(3) squares of the Treasure and Pit
+            The Pit must not be placed within two(2) squares from the Treasure
+            The Hero must not be placed a.) within three(3) squares from the Monster and b.) within two(2) squares from the Pit and Treasure
+    Build the 20x20 game board with buttons
+    Only show the hero within the board
+    With every button clicked
+        check to see if the hero is close to the pit, treasure, or monster
+            if the hero is close to the monster or pit or treasure
+                notify the hero in the text box
+        If a button is clicked where the pit or monster is located
+            display message that the hero is dead
+            exit game
+        If a button is clicked with the treasure
+            display a message that the hero has won
+            exit game
+'''
 import tkinter as tk
 from tkinter import ttk, Button
-from itertools import product
 from functools import partial
 from Class.cell import Cell
 from Class.board import Game_Board
