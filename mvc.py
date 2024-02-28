@@ -80,11 +80,19 @@ class View:
         controller.button_obj(self.left_frame)
 
         # add widgets to each frame
+        self.right_frame = ttk.Frame(root)
+        self.right_frame.grid(column=1, row=1, sticky=tk.N)
+        #
+        # self.btn_widget = tk.Button(self.right_frame, text="This is N")
+        # self.btn_widget.grid(column=0, row=1, rowspan=2, sticky=tk.S)
 
         # Create a Text widget
-        self.text_widget = tk.Text(root)
-        self.text_widget.grid(column=1, row=1, sticky=tk.NE)
+        self.text_widget = tk.Text(self.right_frame)
+        self.text_widget.grid(column=0, row=0, sticky=tk.NE, padx=0)
         self.text_widget.insert("1.0", 'Lets get ready to rumble!\nStart selecting buttons to find your treasure!' + "\n")
+
+
+
 
     def update_text_contents(self, new_contents):
         # Update the Text widget with the new text contents
