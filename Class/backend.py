@@ -4,14 +4,14 @@ class back_end:
     def __init__(self):
         pass
 
-
+    # Get json file data
     @staticmethod
     def get_data(db_file):
         with open(db_file) as json_file:
             # Reading from json file
             db = json.load(json_file)
             return db
-
+    # Save json file data
     @staticmethod
     # save data
     def save_data(file, db):
